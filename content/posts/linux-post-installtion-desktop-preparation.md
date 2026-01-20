@@ -229,6 +229,7 @@ Set GTK icon theme
 ```
 (user)$ ls /usr/share/icons
 (user)$ gsettings set org.gnome.desktop.interface icon-theme Papirus
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
 ```
 
 For dark GTK theme, install package `gnome-themes-extra`, then:
@@ -237,8 +238,10 @@ For dark GTK theme, install package `gnome-themes-extra`, then:
 (user)$ ls /usr/share/themes
 # GTK3
 (user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
 # GTK4
-(user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark/default
+(user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+(user)$ gsettings set org.gnome.desktop.interface color-scheme default
 ```
 
 Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_theme_configuration)

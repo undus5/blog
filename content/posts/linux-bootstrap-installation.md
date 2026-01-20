@@ -332,7 +332,8 @@ We use [dracut](https://wiki.archlinux.org/title/Dracut) to generate
 [initramfs](https://wiki.archlinux.org/title/Arch_boot_process#initramfs) image,
 and pack the
 [key file](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Types_of_keyfiles)
-into it.
+into it. The reason I choose dracut instead of mkinitcpio is that dracut is
+more general, since I always try to avoid using tools limited to specific distros.
 
 [Apply key file](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Adding_LUKS_keys)
 to encrypted partition.

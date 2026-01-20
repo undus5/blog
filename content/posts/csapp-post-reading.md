@@ -64,7 +64,7 @@ the following command to initiate the new system with the help of ld-linux.so:
 ```
 
 When I learned about virutal memory page, it reminded me some
-good old times, more than a decade ago I think, I was still a teenager at the time,
+good old times, more than a decade ago I think,
 there was a list of tricks from the internet for improving Microsoft Windows
 performance, one of them is about tweaking the virtual memory page size,
 virtual memory page, what a mystery name to me at that very moment.

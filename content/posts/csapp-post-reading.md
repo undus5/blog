@@ -2,7 +2,7 @@
 title       = 'CSAPP Post Reading'
 subtitle    = ''
 date        = '2025-12-29'
-lastmod     = '2026-01-20'
+lastmod     = '2026-01-21'
 tags        = []
 showSummary = true
 showTOC     = true
@@ -47,8 +47,8 @@ decode the data.
 
 This book also helped me better understanding the C programming language, in fact
 I've read through the classic "K&R" before, but I felt I just scratched on the
-surface, didn't get too much. After reading CSAPP, at least I can distinguish
-the `*` and `&` immediately, that means a lot.
+surface, didn't really get into it. After reading CSAPP, at least I can distinguish
+the referencing operaters between `*` and `&` immediately, that means a lot.
 
 When I learned what a ".so" library is, and also the overall principle of linking,
 it hit me with a "Aha!".

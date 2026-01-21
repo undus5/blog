@@ -80,6 +80,5 @@ that joy of acquiring knowledge.
 The next book should be The Algorithm Design Manual according to
 [teachyourselfcs.com](https://teachyourselfcs.com/),
 but I am more interest in operating system, so I will try
-[OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/) first,
-wish me luck, to be continued.
+[OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/) first, to be continued.
 

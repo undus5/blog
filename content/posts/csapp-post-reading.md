@@ -42,8 +42,13 @@ via some conventions and mechanisms designed by the pioneers. Since these
 zeros and ones are contiguous, whether in ram or disk, or from network interface,
 you need to split them into meaningful segments in some way, that's the reason
 there're always header and maybe footer in the data structures like network
-packets and even in memory spaces, which tell you where to begin, end and how to
+packet and even in memory space, which tell you where to begin, end and how to
 decode the data.
+
+This book also helped me better understanding the C programming language, in fact
+I've read through the classic "K&R" before, but I felt I just scratched on the
+surface, didn't get too much. After reading CSAPP, at least I can distinguish
+the `*` and `&` immediately, that means a lot.
 
 When I learned what a ".so" library is, and also the overall principle of linking,
 it hit me with a "Aha!".

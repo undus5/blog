@@ -143,6 +143,9 @@ Create regular user:
 (root)# passwd user1
 ```
 
+`wheel` is the superuser group for sudo in Arch and Fedora, for Debian,
+it's named `sudo`.
+
 ## GUI Fonts
 
 Install Noto fonts related packages:
@@ -213,24 +216,7 @@ replace with custom fonts under `~/.local/share/fonts`.
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)
 
-## Icon Theme
-
-Install
-[icons](https://wiki.archlinux.org/title/Icons)
-related packages: `hicolor-icon-theme papirus-icon-theme`.
-
-`wheel` is the superuser group for sudo in Arch and Fedora, for Debian,
-it's named `sudo`.
-
 ## GTK Theme
-
-Set GTK icon theme
-
-```
-(user)$ ls /usr/share/icons
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Papirus
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Papirus-Dark
-```
 
 For dark GTK theme, install package `gnome-themes-extra`, then:
 
@@ -250,9 +236,10 @@ Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_
 ## Qt Theme
 
 IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
-KDE apps, since they are tightly coupled with the KDE suite, heavily
-rely on KDE's components, lots of dependencies would be installed even
-for a very simple app, which is annoying. LXQt apps are in a similar situation.
+KDE replated components, since they are tightly coupled with the KDE framework,
+lots of dependencies would be installed even for a very simple package like
+[breeze-icons](https://github.com/KDE/breeze-icons/), which is annoying.
+LXQt is in a similar situation.
 
 The original
 [qt6ct](https://github.com/trialuser02/qt6ct)
@@ -260,4 +247,26 @@ is archived, although there is a
 [successor](https://www.opencode.net/trialuser/qt6ct), I decided not dealing with
 KDE apps anymore. For other independent Qt apps, they usually work well by default,
 no need tools like qt5ct/qt6ct get involved.
+
+## Icon Theme
+
+Install basic
+[icons](https://wiki.archlinux.org/title/Icons)
+theme: `hicolor-icon-theme`.
+
+If you want to use Breeze icon theme, just download the repo manually:
+
+```
+(user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
+(user)$ cp -r ~/Downloads/breeze-icons/icons ~/.local/share/icons/Breeze
+(user)$ cd ~/.local/share/icons/Breeze
+(user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
+```
+
+Change GTK icon theme
+
+```
+(user)$ ls /usr/share/icons
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
+```
 

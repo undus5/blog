@@ -29,7 +29,7 @@ self-justification, there was another factor causing this result, which is
 English is a second language for me, and I was not that skilled with it at the
 moment. But I don't want to read translated books anymore since I could read in
 english, there're always missing or even false information in these translated
-versions, especially for high-tech subjects.
+versions, especially for technical subjects.
 
 That's how things started, and I felt frustrated in the following years, util
 now I finished reading the book, I realized no need to feel in that way back

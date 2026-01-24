@@ -189,18 +189,14 @@ syntax on
 " Colorscheme
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" built-in colors which support both light && dark modes:
-" vim & nvim : quiet lunaperche
-" vim        : retrobox wildcharm
-" set colorscheme or turn off syntax highlighting
+" to list built-in color themes, type `:colo <Tab>`
 
-"set background=dark
-
-"try
-"    colorscheme quiet
-"catch
-"    syntax off
-"endtry
+set background=dark
+try
+    colorscheme habamax
+catch
+    syntax off
+endtry
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable Plugins

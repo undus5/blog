@@ -139,7 +139,7 @@ e.g. Desktop, Documents, Downloads etc.
 Create regular user:
 
 ```
-(root)# useradd -m -G wheel -s /bin/bash user1
+(root)# useradd -G wheel user1
 (root)# passwd user1
 ```
 

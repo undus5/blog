@@ -13,7 +13,7 @@ weight      = 9100
 | Windows 11 LTSC to IoT | \`changepk.exe /ProductKey CGK42-GYN6Y-VD22B-BX98W-J8JXD\` |
 | Windows 10 LTSC to IoT | \`changepk.exe /ProductKey QPM6N-7J2WJ-P88HH-P3YRH-YY74H\` |
 | Bootable USB | [Rufus](https://rufus.ie/en/) , [Ventoy](https://ventoy.net/en/index.html) |
-| Drivers | [万能驱动 v7.23.1221.1 最终版](https://www.yrxitong.com/h-nd-395.html) ([One Drive](https://yrxitong6-my.sharepoint.cn/:f:/g/personal/yrxitong_com_yrxitong_com/EpDqzY2EVRBKnD1fI3pOi-4BEBocYXSWEKnpjA5Rm9MeIw)) |
+| Drivers | [Snappy Driver Installer Origin](https://www.glenn.delahoy.com/snappy-driver-installer-origin/) |
 | Activation | [Microsoft-Activation-Scripts](https://github.com/massgravel/Microsoft-Activation-Scripts) (\`irm https://get.activated.win \| iex\`) |
 | Zip/Unzip | [WinRAR](https://dl.lancdn.com/landian/soft/winrar/) , [NanaZip](https://github.com/M2Team/NanaZip) , [7-Zip](https://www.7-zip.org/) |
 | Office Suite | [Office 2024 Offline Installer](https://gravesoft.dev/office_c2r_links) |

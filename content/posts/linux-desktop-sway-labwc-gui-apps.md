@@ -1,6 +1,6 @@
 +++
 title       = 'Linux Desktop: Sway, Labwc, GUI Apps'
-lastmod     = '2025-12-04'
+lastmod     = '2026-01-30'
 date        = '2025-11-30'
 tags        = []
 showSummary = true
@@ -24,12 +24,10 @@ You only need a window manager to do your work.
 You don't really need a versatile desktop suite, just a window manager can get
 your job done, less components, less bugs, more efficient.
 
-If you prefer keyboard navigation, then choose Sway,
-if you prefer using mouse to point and click, then choose Labwc.
+If you prefer keyboard navigation, then use Sway,
+if you prefer using mouse to point and click, then then Labwc.
 
-This guide is based on Arch, but could also work for Debian/Ubuntu and Fedora,
-I'm trying my best to make it distro irrelevant, since I don't like to be bound
-to any specific platform in any form, always maintaining the ability for transition.
+This guide is distro independent, tested on Arch and Fedora.
 
 ## Sway Labwc
 
@@ -37,37 +35,26 @@ Install [Sway](https://wiki.archlinux.org/title/Sway),
 [Labwc](https://wiki.archlinux.org/title/Labwc) and other essential packages:
 
 ```
-sway swaylock swaybg labwc
-xdg-desktop-portal-wlr xdg-desktop-portal-gtk wl-clipboard
-wmenu mako wob grim sway-contrib kanshi wev
+sway swaylock swaybg labwc wl-clipboard wmenu mako wob kanshi grim wev
+xdg-desktop-portal-gtk
 ```
-
-Arch: `xorg-xwayland`\
-Debian: `xwayland`\
-Fedora: `xorg-x11-server-Xwayland`
 
 [xdg-desktop-portal](https://wiki.archlinux.org/title/XDG_Desktop_Portal):\
 xdg-desktop-portal-gtk : necessary component for e.g. file chooser.\
-xdg-desktop-portal-wlr : necessary component for e.g. screenshot.\
 [wl-clipboard](https://github.com/bugaevc/wl-clipboard) : necessary for ctrl-c ctrl-v function.\
 [wmenu](https://codeberg.org/adnano/wmenu) : menu for launching apps and running commands.\
 [mako](https://github.com/emersion/mako) : desktop notification.\
 [wob](https://github.com/francma/wob) : indicator bar for volume or brightness.\
-[grim](https://gitlab.freedesktop.org/emersion/grim) screenshot tool for wayland.\
-[sway-contrib](https://github.com/OctopusET/sway-contrib) : grim helper for partial screenshot.\
 [kanshi](https://gitlab.freedesktop.org/emersion/kanshi): dynamic output configuration.\
-[wev](https://git.sr.ht/~sircmpwn/wev) : detect key name, for configuring keybindings.
+[grim](https://gitlab.freedesktop.org/emersion/grim) screenshot tool for wayland.\
+[wev](https://git.sr.ht/~sircmpwn/wev) : detect key name, for configuring keybindings.\
+[sway-contrib](https://github.com/OctopusET/sway-contrib) : grim helper for partial screenshot.
 
-I won't discuss their configurations in detail, you can refer to the official documentations.
-Here's my configuration for Sway and Labwc:
-[waylabrc](https://github.com/undus5/waylabrc).
+We won't discuss their configurations in detail, you can refer to the official documentations.
 Instead, I will show you some basic ideas about how I use them.
 
-I use Sway on my physical machines, and Labwc on virtual machines, since
-the keybindings would conflict with each other if the VMs also use Sway.
-
-For Sway, since it's keyboard driven and tiling, I bind `Super + 1/2/3/4/5/6/7/8/9/0`,
-`Super + q/w/e/r/t/y/u/i/o/p/[/]`, `Super + z/x/c/v/b/n/m` to corresponding
+For Sway, since it is keyboard driven and tiling, I bind `Super + 1/2/3/4/5/6/7/8/9/0`,
+`Super + q/w/e/r/t/y/u/i/o/p`, `Super + z/x/c/v/b/n/m` to corresponding
 workspaces, and `Super + Shift + ...` to move windows into them. Then I use apps
 in maximum mode, one window per workspace for most of time. In this way, I need
 to track which workspaces are in use, so I choose built-in swaybar to do this work.
@@ -80,7 +67,7 @@ For Labwc, there isn't much to say, all the actions can be invoked from the
 right-click context menu. Since it's mouse driven and floating, single workspace
 is enough, you just use `Alt + Tab` to switch between windows.
 
-No fancy cosmetic decorations, just simple and clean, this is the way.
+That's all. Just keep it simple and clean.
 
 ## Terminal
 
@@ -90,19 +77,10 @@ both are simple and fast terminal emulators.
 
 ## File Manager
 
-Install Nautilus aka [GNOME/Files](https://wiki.archlinux.org/title/GNOME/Files):
+Nautilus aka [GNOME/Files](https://wiki.archlinux.org/title/GNOME/Files) is a
+good one.
 
-Arch, Fedora:
-
-```
-nautilus ifuse gvfs gvfs-mtp gvfs-gphoto2 gvfs-afc
-```
-
-Debian:
-
-```
-nautilus ifuse gvfs gvfs-backends gvfs-fuse
-```
+Packages for Arch and Fedora: `nautilus ifuse gvfs gvfs-mtp gvfs-gphoto2 gvfs-afc`
 
 [GVFS](https://wiki.archlinux.org/title/File_manager_functionality#Mounting)
 is for auto mounting usb drives, mobile devices and trash functionality.
@@ -115,7 +93,7 @@ apps, not for photos. To fix this, first open that virtual filesystem for apps,
 the URL in the address bar is like `afc://<URL>:3`, change `:3` to `:1` and
 press Enter, now you switch to the virtual filesystem for photos.
 
-Set Nautilus as default file manager:
+Set nautilus as default file manager:
 
 ```
 xdg-mime default org.gnome.Nautilus.desktop inode/directory
@@ -160,10 +138,10 @@ Create `/usr/local/bin/open-terminal-here.sh` with:
 
 ```
 #!/bin/bash
-_abspath=$(realpath "${1}")
-if [[ -d "${_abspath}" ]]; then
-    foot -D "${_abspath}"
-    # alacritty --working-directory "${_abspath}"
+abspath=$(realpath "${1}")
+if [[ -d "${abspath}" ]]; then
+    foot -D "${abspath}"
+    # alacritty --working-directory "${abspath}"
 else
     foot
     # alacritty
@@ -199,9 +177,8 @@ You may also want to disable "Recent Files":
 ## Zip/Unzip
 
 I recommend [PeaZip](https://peazip.github.io/) as GUI archive manager.
-There're official packages for Debian and Fedora.
 
-For Arch, install dependency package `qt6pas` first.
+Install dependency package `qt6pas` first.
 Then download peazip tarball and extract to e.g. `/data/apps/peazip`,
 use `/data/apps/peazip/res/share/batch/freedesktop_integration/peazip.desktop`
 as template to create 2 desktop entries in `~/.local/share/applications/`:
@@ -237,26 +214,24 @@ Also recommend installing `7zip` package for zip/unzip in command line.
 
 Tools like [Ventoy](https://www.ventoy.net/) need
 [polkit](https://wiki.archlinux.org/title/Polkit)
-to evaluate privilege.\
+to evaluate privilege.
 
-Install packages:
+Packages for Arch and Fedora: `polkit mate-polkit`
 
-Arch, Fedora: `polkit polkit-gnome`\
-Debian: `polkitd policykit-1-gnome`
+The executable needs to be added into autostart script for Sway and Labwc.
 
-The executable `/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1` needs
-to be added into autostart script for Sway and Labwc.
+Excutable for Arch: `/usr/lib/mate-polkit/polkit-mate-authentication-agent-1`\
+Excutable for Fedora: `/usr/libexec/polkit-mate-authentication-agent-1`
 
 ## Input Method
 
 For input method, I use [Fcitx5](https://fcitx-im.org/wiki/Fcitx_5) and
 [RIME](https://rime.im).
-Here is my RIME configs for Wubi86 : [rimerc](https://github.com/undus5/rimerc).
+Here is my RIME configs for Wubi86:
+[rime-wubi86s](https://github.com/undus5/rime-wubi86s).
 
-Install packages:
-
-Arch, Fedora: `fcitx5 fcitx5-rime fcitx5-gtk fcitx5-qt fcitx5-configtool`\
-Debian: `fcitx5 fcitx5-rime fcitx5-frontend-gtk4 fcitx5-frontend-qt6 fcitx5-config-qt`
+Packages for Arch and Fedora:
+`fcitx5 fcitx5-gtk fcitx5-qt fcitx5-configtool fcitx5-rime`
 
 Add environment variables to `.bashrc`, then relogin user:
 
@@ -270,19 +245,76 @@ to be added into autostart script for Sway and Labwc.
 
 Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 
+## GTK Theme
+
+For GTK 4:
+
+```
+(user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+(user)$ gsettings set org.gnome.desktop.interface color-scheme default
+```
+
+For GTK 3, install `gnome-themes-extra` package:
+
+```
+(user)$ ls /usr/share/themes
+(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+```
+
+Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_theme_configuration)
+, [GTK 3 settings on Wayland](https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland)
+
+## Qt Theme
+
+IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
+KDE replated components, since they are tightly coupled with the KDE framework,
+lots of dependencies would be installed even for a very simple package like
+[breeze-icons](https://github.com/KDE/breeze-icons/), which is annoying.
+LXQt is in a similar situation.
+
+The original
+[qt6ct](https://github.com/trialuser02/qt6ct)
+is archived, although there is a
+[successor](https://www.opencode.net/trialuser/qt6ct), I decided not dealing with
+KDE apps anymore. For other independent Qt apps, they usually work well by default,
+no need tools like qt5ct/qt6ct get involved.
+
+## Icon Theme
+
+Install basic
+[icons](https://wiki.archlinux.org/title/Icons)
+theme: `hicolor-icon-theme`.
+
+If you want to use Breeze icon theme, just download the repo manually:
+
+```
+(user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
+(user)$ cp -r ~/Downloads/breeze-icons/icons ~/.local/share/icons/Breeze
+(user)$ cd ~/.local/share/icons/Breeze
+(user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
+```
+
+Change GTK icon theme
+
+```
+(user)$ ls /usr/share/icons
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
+```
+
 ## Other Apps
 
-| Category | Arch Packages | Debian | Fedora |
-| --- | --- | --- | --- |
-| Audio Control | pavucontrol | - | - |
-| PDF | zathura zathura-pdf-poppler | - | - |
-| Image Viewer | swayimg | - | - |
-| Video Player | mpv | - | - |
-| Ebook Reader | foliate | - | - |
-| Audiobook Player | [cozy](https://cozy.sh/) | - | - |
-| Text to QR Code | qrencode | - | - |
-| QR Code to Text | zbar | zbar-tools | - |
-| Web Browser | chromium [brave](https://brave.com/linux/) | - | - |
+| Category | Arch | Fedora |
+| --- | --- | --- |
+| Audio Control | pavucontrol | - |
+| PDF | zathura zathura-pdf-poppler | - |
+| Image Viewer | swayimg | - |
+| Video Player | mpv | - |
+| Ebook Reader | foliate | - |
+| Audiobook Player | [cozy](https://cozy.sh/) | - |
+| Text to QR Code | qrencode | - |
+| QR Code to Text | zbar | zbar-tools |
+| Web Browser | chromium [brave](https://brave.com/linux/) | - |
 
 Brave disable Crypto and AI related components via
 [Group Policy](https://support.brave.com/hc/en-us/articles/360039248271-Group-Policy):

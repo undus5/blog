@@ -22,9 +22,7 @@ Essential preparation before desktop components getting involved.
 
 ## Preface
 
-This guide is based on Arch, but could also work for Debian/Ubuntu and Fedora.
-I'm trying my best to make it distro irrelevant, since I don't like to be bound
-to any specific platform in any form, always maintaining the ability for transition.
+This guide is distro independent, tested on Arch and Fedora.
 
 ## Default Editor
 
@@ -36,65 +34,37 @@ You could replace `nvim` with whatever you like.
 
 ## Console Fonts
 
-Install package `terminus-fonts` (Arch, Fedora) or `fonts-terminus` (Debian).
+Install package:
+
+Arch: terminus-fonts\
+Fedora: terminus-fonts-console
 
 ```
-(root)# echo "FONT=ter-132b" >> /etc/vconsole.conf
+(root)# echo "FONT=ter-122b" >> /etc/vconsole.conf
 ```
 
-Full font list is under `/usr/share/kbd/consolefonts/`, use `setfont <font_name>`
-command to test.
+Full font list:
+
+Arch: `ls /usr/share/kbd/consolefonts/`\
+Fedora: `ls /usr/lib/kbd/consolefonts/`
+
+Change font temporally: `setfont <font_name>`
 
 Ref: [Linux_console#Fonts](https://wiki.archlinux.org/title/Linux_console#Fonts)
-
-## Console Caps Ctrl
-
-Remap `CapsLock` to `Ctrl` for console.
-
-```
-(root)# cd /usr/share/kbd/keymaps/i386/qwerty
-(root)# gzip -dc < us.map.gz > usa.map
-(root)# sed -i '/^keycode[[:space:]]58/c\keycode 58 = Control' usa.map
-(root)# echo "KEYMAP=usa" >> /etc/vconsole.conf
-```
-
-Ref: [Linux_console/Keyboard_configuration#Creating_a_custom_keymap](https://wiki.archlinux.org/title/Linux_console/Keyboard_configuration#Creating_a_custom_keymap)
-
-## Disable Watchdogs
-
-This setting is for
-[improving performance](https://wiki.archlinux.org/title/Improving_performance#Watchdogs).
-
-Check for a hardware watchdog module:
-
-```
-(root)# lsmod | grep wdt
-```
-
-Add to
-[kernel module blacklist](https://wiki.archlinux.org/title/Kernel_module#Blacklisting):
-
-```
-(root)# cat > /etc/modprobe.d/nowatchdogs.conf << EOB
-blacklist iTCO_wdt
-blacklist sp5100_tco
-blacklist intel_oc_wdt
-EOB
-```
 
 ## PipeWire
 
 Install [PipeWire](https://wiki.archlinux.org/title/PipeWire) related packages:
 
-Arch, Debian: `pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber`\
-Fedora: `pipewire pipewire-alsa pipewire-pulseaudio pipewire-plugin-jack wireplumber`
+Arch: `pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber`\
+Fedora: `pipewire pipewire-utils`
 
 ## Bluetooth
 
 Install [Bluetooth](https://wiki.archlinux.org/title/Bluetooth) related packages:
 
 Arch: `bluez bluez-utils`\
-Fedora, Debian: `bluez bluez-tools`
+Fedora: `bluez bluez-tools`
 
 Enable systemd service: `systemctl enable --now bluetooth.service`.
 
@@ -102,8 +72,7 @@ Enable systemd service: `systemctl enable --now bluetooth.service`.
 
 Install [CUPS](https://wiki.archlinux.org/title/CUPS) related packages:
 
-Arch, Fedora: `cups cups-pdf`\
-Debian: `cups printer-driver-cups-pdf`
+Arch, Fedora: `cups cups-pdf`
 
 Enable systemd service: `systemctl enable --now cups.service`.
 
@@ -124,45 +93,21 @@ on Linux for the well known reasons.
 Install `mesa` and `vulkan` related packages:
 
 Arch AMD: `mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon`\
-Debian, Fedora AMD: `mesa mesa-vulkan-drivers`
+Arch Intel: `mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver`
 
-Arch Intel: `mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver`\
-Debian Intel: `mesa mesa-vulkan-drivers intel-media-va-driver`\
-Fedora Intel: `mesa mesa-vulkan-drivers libva-intel-media-driver`
-
-## Regular User
-
-Install [xdg-user-dirs](https://wiki.archlinux.org/title/XDG_user_directories)
-package, it's for managing well known user directories
-e.g. Desktop, Documents, Downloads etc.
-
-Create regular user:
-
-```
-(root)# useradd -G wheel user1
-(root)# passwd user1
-```
-
-`wheel` is the superuser group for sudo in Arch and Fedora, for Debian,
-it's named `sudo`.
+For Fedora, it seems these drivers and firmwares are bundled with core package
+group.
 
 ## GUI Fonts
 
 Install Noto fonts related packages:
 
-Arch: `noto-fonts noto-fonts-cjk noto-fonts-emoji`\
-Debian:
-```
-fonts-noto fonts-noto-extra fonts-noto-mono
-fonts-noto-cjk fonts-noto-cjk-extra
-fonts-noto-color-emoji
-fonts-noto-ui-core fonts-noto-ui-extra fonts-noto-unhinted
-```
+Arch: `noto-fonts noto-fonts-cjk noto-fonts-emoji`
+
 Fedora:
 ```
-google-noto-fonts-all
+google-noto-fonts-all google-noto-color-emoji-fonts
 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts
-google-noto-emoji-fonts
 ```
 
 The default lookup order for CJK fonts would pick wrong characters in some cases,
@@ -216,57 +161,54 @@ replace with custom fonts under `~/.local/share/fonts`.
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)
 
-## GTK Theme
+## Regular User
 
-For dark GTK theme, install package `gnome-themes-extra`, then:
+Install [xdg-user-dirs](https://wiki.archlinux.org/title/XDG_user_directories)
+package, it's for managing well known user directories
+e.g. Desktop, Documents, Downloads etc.
 
-```
-(user)$ ls /usr/share/themes
-# GTK3
-(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
-(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
-# GTK4
-(user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark
-(user)$ gsettings set org.gnome.desktop.interface color-scheme default
-```
-
-Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_theme_configuration)
-, [GTK 3 settings on Wayland](https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland)
-
-## Qt Theme
-
-IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
-KDE replated components, since they are tightly coupled with the KDE framework,
-lots of dependencies would be installed even for a very simple package like
-[breeze-icons](https://github.com/KDE/breeze-icons/), which is annoying.
-LXQt is in a similar situation.
-
-The original
-[qt6ct](https://github.com/trialuser02/qt6ct)
-is archived, although there is a
-[successor](https://www.opencode.net/trialuser/qt6ct), I decided not dealing with
-KDE apps anymore. For other independent Qt apps, they usually work well by default,
-no need tools like qt5ct/qt6ct get involved.
-
-## Icon Theme
-
-Install basic
-[icons](https://wiki.archlinux.org/title/Icons)
-theme: `hicolor-icon-theme`.
-
-If you want to use Breeze icon theme, just download the repo manually:
+Create regular user:
 
 ```
-(user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
-(user)$ cp -r ~/Downloads/breeze-icons/icons ~/.local/share/icons/Breeze
-(user)$ cd ~/.local/share/icons/Breeze
-(user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
+(root)# useradd -G wheel user1
+(root)# passwd user1
 ```
 
-Change GTK icon theme
+`wheel` is the superuser group for sudo in Arch and Fedora, for Debian,
+it's named `sudo`.
+
+## Disable Watchdogs
+
+This setting is for
+[improving performance](https://wiki.archlinux.org/title/Improving_performance#Watchdogs).
+
+Check for a hardware watchdog module:
 
 ```
-(user)$ ls /usr/share/icons
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
+(root)# lsmod | grep wdt
 ```
+
+Add to
+[kernel module blacklist](https://wiki.archlinux.org/title/Kernel_module#Blacklisting):
+
+```
+(root)# cat > /etc/modprobe.d/nowdt.conf << EOB
+blacklist iTCO_wdt
+blacklist sp5100_tco
+blacklist intel_oc_wdt
+EOB
+```
+
+## Console Caps Ctrl
+
+Remap `CapsLock` to `Ctrl` for console.
+
+```
+(root)# cd /usr/share/kbd/keymaps/i386/qwerty
+(root)# gzip -dc < us.map.gz > usa.map
+(root)# sed -i '/^keycode[[:space:]]58/c\keycode 58 = Control' usa.map
+(root)# echo "KEYMAP=usa" >> /etc/vconsole.conf
+```
+
+Ref: [Linux_console/Keyboard_configuration#Creating_a_custom_keymap](https://wiki.archlinux.org/title/Linux_console/Keyboard_configuration#Creating_a_custom_keymap)
 

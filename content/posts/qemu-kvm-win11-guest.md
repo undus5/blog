@@ -304,23 +304,19 @@ Kind=bridge
 # /etc/systemd/network/25-brlan.network
 [Match]
 Name=brlan
-
 [Link]
 RequiredForOnline=routable
-
 [Network]
 DHCP=yes
 IPv4Forwarding=yes
-
 [DHCPv4]
 RouteMetric=128
 ```
 
 ```
-# /etc/systemd/network/25-brlan-en.network
+# /etc/systemd/network/25-brlan-ether.network
 [Match]
 Name=enp0s1
-
 [Network]
 Bridge=brlan
 ```
@@ -358,7 +354,6 @@ MACAddress=none
 # /etc/systemd/network/25-brlan.link
 [Match]
 OriginalName=brlan
-
 [Link]
 MACAddressPolicy=none
 ```
@@ -383,18 +378,15 @@ Kind=bridge
 # /etc/systemd/network/26-brnat.network
 [Match]
 Name=brnat
-
 [Network]
 IPv4Forwarding=yes
 IPMasquerade=yes
 DHCPServer=true
-Address=10.9.8.7/24
-
+Address=10.20.30.40/24
 [DHCPServer]
-DNS=10.9.8.7
+DNS=10.20.30.40
 PoolOffset=100
 PoolSize=100
-
 [DHCPv4]
 RouteMetric=256
 ```
@@ -408,10 +400,10 @@ them static IP addresses via `26-brnat.network`:
 ...
 [DHCPServerStaticLease]
 MACAddress=52:54:00:12:34:56
-Address=10.9.8.256
+Address=10.20.30.201
 [DHCPServerStaticLease]
 MACAddress=52:54:00:12:34:78
-Address=10.9.8.278
+Address=10.20.30.202
 ...
 ```
 
@@ -811,6 +803,7 @@ Check whether new memlock limit configuration is applied:
 If you don't remove this limit, you may encounter error message like this:
 
 > failed to setup container for group 20: memory listener initialization failed: Region mem: vfio_container_dma_map
+> ... (Cannot allocate memory)
 
 Add isolated GPU to virtual machine, remeber GPU device's PCI address from
 IOMMU group, it looks like `03:00.0`, add it into QEMU options:
@@ -903,6 +896,24 @@ Start `looking-glass-client` with SPICE UNIX socket file:
 
 ```
 (user)$ looking-glass-client -f /dev/kvmfr0 -c /data/vms/win11/spice.sock -p 0
+```
+
+---
+
+Since kvmfr has conflict with virtiofsd for now, you may want to use standard
+shared memory via
+[systemd-tmpfiles(8)](https://man.archlinux.org/man/systemd-tmpfiles.8.en):
+
+Create `/etc/tmpfiles.d/10-looking-glass.conf`:
+
+```
+f /dev/shm/looking-glass 0660 user1 user1 -
+```
+
+Apply configuration:
+
+```
+(root)# systemd-tmpfiles --remove --create
 ```
 
 ## Udev Rules

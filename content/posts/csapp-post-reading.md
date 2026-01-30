@@ -24,12 +24,13 @@ seem interesting, but hard and time-consuming, I think I'm not gonna have chance
 to use these knowledge, maybe invest the time on learning other cool stuff?",
 then finally I lost patient, couldn't read anymore.
 
-Here's a little
-self-justification, there was another factor causing this result, which is
-English is a second language for me, and I was not that skilled with it at the
-moment. But I don't want to read translated books anymore since I could read in
-english, there're always missing or even false information in these translated
-versions, especially for technical subjects.
+Here's a little self-justification, there's another factor causing this
+result, which is English is a second language for me, I was not that skilled
+with it at the moment, reading in English was way more energy consuming
+especially for professional books. On the other hand, I don't want to read
+translated books since I realized there're always missing or even false
+information in translated versions. This delimma made me give up easily during
+that time.
 
 That's how things started, and I felt frustrated in the following years, util
 now I finished reading the book, I realized no need to feel in that way back

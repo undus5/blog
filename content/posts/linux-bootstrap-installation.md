@@ -1,7 +1,7 @@
 +++
 title       = 'Linux Bootstrap Installation'
 aliases     = ["/posts/bootstrap-install-any-linux-distro/"]
-lastmod     = '2025-11-04'
+lastmod     = '2026-01-30'
 date        = '2025-10-19'
 tags        = []
 showTOC     = true
@@ -39,15 +39,18 @@ settle down, go read the wiki, learn the basics, then you can pick up whatever
 distros you like and tweaking them to the shape you want, the only differences
 are just package management system, release model and community support.
 
-This guide is based on Arch Linux, but also works for Debian/Ubutnu and Fedora,
-the differences are minor, demonstrated in [Debian Fedora](#debian-fedora) section.
-I'm trying my best to make it distro irrelevant, since I don't like to be bound
-to any specific platform in any form, always maintaining the ability for transition.
+This guide is basically distro independent, since I don't like to be bound to
+any specific platform in any form, always avoid using any distro specific tools,
+try my best to maintain the portability. It's tested on Arch, Fedora and
+Debian, the differences are minor.
 
 ## Live ISO
 
-You need a [live iso](https://archlinux.org/download/)
-image to boot into live system for doing installation. 
+You need a live iso image to boot into live system for doing installation. 
+
+[Arch](https://archlinux.org/download/),
+[Fedora](https://www.fedoraproject.org/),
+[Debian](https://www.debian.org/)
 
 To create bootable USB stick, use [Ventoy](https://www.ventoy.net/en/index.html)
 or [Rufus](https://rufus.ie/en/).
@@ -129,12 +132,10 @@ of the root partition, just like normal folders do.
 (root)# mount /dev/mapper/root /mnt
 (root)# btrfs subvolume create /mnt/@
 (root)# btrfs subvolume create /mnt/@home
-(root)# btrfs subvolume create /mnt/@data
 (root)# umount /mnt
 
 (root)# mount -o subvol=@ /dev/mapper/root /mnt
-(root)# mount -o subvol=@home --mkdir /dev/mapper/root /mnt/home
-(root)# mount -o subvol=@data --mkdir /dev/mapper/root /mnt/data
+(root)# mount --mkdir -o subvol=@home /dev/mapper/root /mnt/home
 (root)# mkfs.fat -F32 /dev/disk/by-partlabel/EFIPART
 (root)# mount --mkdir /dev/disk/by-partlabel/EFIPART /mnt/efi
 ```
@@ -144,10 +145,23 @@ Copy on Write (CoW) nature, useful for creating backup against system crash.
 
 ## Repo Mirror
 
-Check the [mirrorlist](https://archlinux.org/mirrorlist/) from official website,
-then edit `/etc/pacman.d/mirrorlist`.
+Check the online mirrorlist, pick proper one, then edit local mirrorlist config.
 
-> For Debian/Ubuntu and Fedora, refer to [Debian Fedora](#debian-fedora) section.
+Arch: [mirrorlist](https://archlinux.org/mirrorlist/),
+local: `/etc/pacman.d/mirrorlist`\
+Fedora: [mirrorlist](https://mirrormanager.fedoraproject.org),
+local: `/etc/yum.repos.d/fedora.repo`\
+Debian: [mirrorlist](https://www.debian.org/mirror/list),
+local: `/etc/apt/sources.list`
+
+## Mount VFS
+
+Mount virtual filesystems to `/mnt` then chroot into it :
+
+```
+(root)# for dir in dev proc run sys; do \
+    mount --mkdir --rbind --make-rslave /$dir /mnt/$dir; done
+```
 
 ## Base System
 
@@ -159,12 +173,27 @@ For Arch it's
 
 ```
 (root)# pacstrap -K /mnt \
-    base linux linux-firmware btrfs-progs dracut zram-generator neovim
+    base linux linux-firmware btrfs-progs dracut zram-generator vim \
+    amd-ucode intel-ucode
 ```
 
-Also install `amd-ucode` or `intel-ucode` for CPU microcode updates.
+For Fedora it's DNF:
 
-> For Debian/Ubuntu and Fedora, refer to [Debian Fedora](#debian-fedora) section.
+```
+(root)# dnf --use-host-config --releasever=43 --installroot=/mnt group install core
+(root)# dnf --use-host-config --releasever=43 --installroot=/mnt install \
+    kernel linux-firmware dracut zram-generator systemd-boot cryptsetup \
+    glibc-langpack-en btrfs-progs vim amd-ucode-firmware
+```
+
+For Debian it's [Debootstrap](https://wiki.debian.org/Debootstrap):
+
+```
+(root)# debootstrap --include=\
+    linux-image-amd64,non-free-firmware,dracut,systemd-zram-generator,\
+    systemd-boot,cryptsetup,btrfs-progs,vim,amd64-microcode,intel-microcode \
+    stable /mnt http://deb.debian.org/debian/
+```
 
 ## Fstab
 
@@ -187,16 +216,12 @@ Then we edit `/mnt/etc/fstab`. If you use `nano` text editor, you can press
 ```
 UUID=xxxxxxxx-...-xxxxxxxxxxxx /     btrfs compress=zstd,subvol=/@     0 0
 UUID=xxxxxxxx-...-xxxxxxxxxxxx /home btrfs compress=zstd,subvol=/@home 0 0
-UUID=xxxxxxxx-...-xxxxxxxxxxxx /data btrfs compress=zstd,subvol=/@data 0 0
 UUID=XXXX-XXXX /efi vfat defaults 0 0
 ```
 
 ## Chroot
 
-Mount virtual filesystems to `/mnt` then chroot into it :
-
 ```
-(root)# for dir in dev proc run sys; do mount --rbind --make-rslave /$dir /mnt/$dir; done
 (root)# chroot /mnt /bin/bash
 ```
 
@@ -208,10 +233,19 @@ Mount virtual filesystems to `/mnt` then chroot into it :
 
 ## Localization
 
+For Arch and Debian:
+
 ```
 (root)# echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 (root)# echo "zh_CN.UTF-8 UTF-8" >> /etc/locale.gen
 (root)# locale-gen
+```
+
+For Fedora, they are provided by packages `glibc-langpack-en`, `glibc-langpack-zh`
+
+Set LANG variable:
+
+```
 (root)# echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 ```
 
@@ -225,6 +259,19 @@ Mount virtual filesystems to `/mnt` then chroot into it :
 
 ```
 (root)# passwd
+```
+
+## Zram
+
+We have large memory storage nowadays, so just put the swap into RAM using
+[zram](https://wiki.archlinux.org/title/Zram).
+
+Create `/etc/systemd/zram-generator.conf`, the size is in MiB.
+
+```
+[zram0]
+zram-size = min(ram, 8192)
+compression-algorithm = zstd
 ```
 
 ## Systemd-Networkd
@@ -241,18 +288,14 @@ For wired network interface, create `/etc/systemd/network/23-lan.network`.
 
 ```
 [Match]
-Name=enp0s1
-
+Name=en*
 [Link]
 RequiredForOnline=routable
-
 [Network]
 DHCP=yes
-
 [DHCPv4]
 RouteMetric=100
-
-[IPV6AcceptRA]
+[IPv6AcceptRA]
 RouteMetric=100
 ```
 
@@ -260,19 +303,15 @@ For wireless network interface, create `/etc/systemd/network/25-wlan.network`.
 
 ```
 [Match]
-Name=wlan0
-
+Name=wl*
 [Link]
 RequiredForOnline=routable
-
 [Network]
 DHCP=yes
 IgnoreCarrierLoss=3s
-
 [DHCPv4]
 RouteMetric=600
-
-[IPV6AcceptRA]
+[IPv6AcceptRA]
 RouteMetric=600
 ```
 
@@ -284,7 +323,8 @@ connections.
 `systemd-networkd-wait-online.service` hanging the systemd boot process.
 
 By default systemd would wait for all the network interfaces online,
-if your computer have multiple network interfaces, it will be a problem.
+if your computer have multiple network interfaces, it would be a problem, 
+systemd services with `Requires=network-online.target` would not start properly.
 To fix this, alter the `systemd-networkd-wait-online.service` by creating
 `/etc/systemd/system/systemd-networkd-wait-online.service.d/override.conf` manually
 or run `systemctl edit systemd-networkd-wait-online.service`:
@@ -309,47 +349,13 @@ Enable the services.
 
 ```
 (root)# systemctl enable systemd-networkd.service
-(root)# systemctl enable systemd-resolved.service
 ```
 
-## Zram
-
-We have lage memory storage nowadays, so just put the swap into RAM using
-[zram](https://wiki.archlinux.org/title/Zram).
-
-Create `/etc/systemd/zram-generator.conf`, the size is in MiB.
+Debian need to move out `/etc/network/interfaces` according to
+[SystemdNetworkd - Debian Wiki](https://wiki.debian.org/SystemdNetworkd)
 
 ```
-[zram0]
-zram-size = min(ram, 8192)
-compression-algorithm = zstd
-```
-
-## Dracut
-
-Remeber I mentioned setting LUKS with a preset key file? This is the right time.
-We use [dracut](https://wiki.archlinux.org/title/Dracut) to generate
-[initramfs](https://wiki.archlinux.org/title/Arch_boot_process#initramfs) image,
-and pack the
-[key file](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Types_of_keyfiles)
-into it. The reason I choose dracut instead of mkinitcpio is that mkinitcpio is
-Arch-specific, since I always try to avoid using tools limited to specific distros.
-
-[Apply key file](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Adding_LUKS_keys)
-to encrypted partition.
-
-```
-cryptsetup luksAddKey /dev/disk/by-partlabel/ROOTPART /etc/cryptsetup-keys.d/root.key
-```
-
-Create `/etc/dracut.conf.d/dracut.conf`.
-
-```
-hostonly="yes"
-enhanced_cpio="yes"
-compress="cat"
-do_strip="no"
-install_optional_items+=" /etc/cryptsetup-keys.d/root.key "
+(root)# mv /etc/network/interfaces /etc/network/interfaces.old
 ```
 
 ## Systemd-Boot
@@ -357,70 +363,34 @@ install_optional_items+=" /etc/cryptsetup-keys.d/root.key "
 [Install UEFI boot manager](https://wiki.archlinux.org/title/Systemd-boot#Installing_the_UEFI_boot_manager).
 
 ```
-bootctl install
-systemctl enable systemd-boot-update.service
+(root)# bootctl install
+(root)# systemctl enable systemd-boot-update.service
 ```
 
-> Note: Debian/Ubuntu and Fedora need some extra work to continue, refer to
-> [Debian Fedora](#debian-fedora) section then jump back.
-
-Since the kernel and initramfs image will be installed to `/boot/` by default,
-we need to copy them to our
-[EFI system partition](https://wiki.archlinux.org/title/EFI_system_partition#Alternative_mount_points)
-manually and create
-[systemd hooks](https://wiki.archlinux.org/title/EFI_system_partition#Using_systemd)
-to update them automatically.
-
-```
-(root)# mkdir -p /efi/boota
-(root)# cp -a /boot/vmlinuz-linux /efi/boota/
-(root)# cp -a /boot/initramfs-linux.img /efi/boota/
-```
-
-Create `/etc/systemd/system/efistub-update.path`.
-
-```
-[Path]
-PathChanged=/boot/initramfs-linux.img
-
-[Install]
-WantedBy=multi-user.target
-WantedBy=system-update.target
-```
-
-Create `/etc/systemd/system/efistub-update.service`.
-
-```
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/cp -af /boot/vmlinuz-linux /efi/boota/
-ExecStart=/usr/bin/cp -af /boot/initramfs-linux.img /efi/boota/
-```
-
-Enable the units.
-
-```
-(root)# systemctl enable efistub-update.{path,service}
-```
-
-Create bootloader entry `/efi/loader/entries/boota.conf`.
+Create bootloader entry `/efi/loader/entries/linux.conf`.
 
 ```
 title Arch Linux
-linux /boota/vmlinuz-linux
-initrd /boota/initramfs-linux.img
+linux /linux/vmlinuz
+initrd /linux/initrd
 options rootflags=subvol=@ quiet splash
 ```
+
+`/linux/vmlinuz` is actually pointed to `/efi/linux/vmlinuz`, since the path
+is relative to the root of your
+[EFI system partition](https://wiki.archlinux.org/title/EFI_system_partition)
+, which is `/efi` in this guide. We will put kernel image and initramfs image
+into `/efi/linux/` via dracut configuation in the next section.
 
 To use
 [BTRFS subvolume as root](https://wiki.archlinux.org/title/Btrfs#Mounting_subvolume_as_root)
 mountpoint, use kernel parameter `rootflags=subvol=@`,
 or you would get an error "Failed to start Switch Root" when booting up.
 
-Edit `/efi/loader/loader.conf`.
+Set default boot entry in `/efi/loader/loader.conf`.
 
 ```
-default boota.conf
+default linux.conf
 timeout 0
 editor no
 ```
@@ -445,93 +415,128 @@ using [rd.luks.name](https://wiki.archlinux.org/title/Dm-crypt/System_configurat
 options rd.luks.name=<UUID>=root root=/dev/mapper/root rootflags=subvol=@
 ```
 
-## Debian Fedora
-
-<-> [Live ISO](#live-iso)
-
-[Debian](https://www.debian.org/),
-[Ubuntu](https://ubuntu.com/download),
-[Fedora](https://www.fedoraproject.org/)
-
-<-> [Repo Mirror](#repo-mirror)
-
-Debian: Check [Debian Mirrors (worldwide)](https://www.debian.org/mirror/list),
-then edit `/etc/apt/sources.list`.
-
-Ubuntu: Check [Mirrors : Ubuntu](https://launchpad.net/ubuntu/+archivemirrors)
-then edit `/etc/apt/sources.list`.
-
-Fedora: Check [MirrorManager](https://mirrormanager.fedoraproject.org),
-then edit `/etc/yum.repos.d/fedora.repo`.
-
-<-> [Base System](#base-system)
-
-Debian/Ubuntu:
-[Debootstrap](https://wiki.debian.org/Debootstrap):
+For Fedora and Debian there's one more step, by default they will trigger a
+systemd [kernel-install(8)](https://man.archlinux.org/man/kernel-install.8)
+plugin to generate systemd-boot loader entry automatically, we just disable it
+since we've already created manually:
 
 ```
-(root)# debootstrap --include=\
-    linux-image-amd64,non-free-firmware,btrfs-progs,dracut,\
-    systemd-zram-generator,systemd-boot,neovim,iwd \
-    stable /mnt http://deb.debian.org/debian/
-```
-
-The Repo URL for Ubuntu is http://archive.ubuntu.com/ubuntu/
-
-Fedora: DNF:
-
-```
-(root)# dnf --use-host-config --releasever=43 --installroot=/mnt group install core
-(root)# dnf --use-host-config --releasever=43 --installroot=/mnt install \
-    kernel linux-firmware btrfs-progs dracut zram-generator systemd-boot neovim iwd
-```
-
-Microcode packages:
-
-Fedora: AMD `amd-ucode-firmware`, Intel `microcode_ctl`\
-Debian: AMD `amd64-microcode`, Intel `intel-microcode`
-
-<-> [Systemd-Boot](#systemd-boot)
-
-Unlike Arch Linux, Debian and Fedora will trigger systemd's
-[kernel-install(8)](https://man.archlinux.org/man/kernel-install.8)
-to copy initramfs and kernel images to ESP partition and generate boot entry
-automatically when using dracut and systemd-boot. Since we want to maintain
-this process in our own way for the flexibility, we need to disable their
-kernel-install plugins and write our own.
-
-```
-(root)# ln -s /dev/null /etc/kernel/install.d/50-dracut.install
 (root)# ln -s /dev/null /etc/kernel/install.d/90-loaderentry.install
 ```
 
-Create `/etc/kernel/install.d/60-bootstub.install`, make it executable.
+## Dracut
+
+Remeber we discussed about setting LUKS with a preset key file? This is the right time.
+We use [dracut](https://wiki.archlinux.org/title/Dracut) to generate
+[initramfs](https://wiki.archlinux.org/title/Arch_boot_process#initramfs) image,
+and pack the
+[key file](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Types_of_keyfiles)
+into it. The reason I choose dracut instead of mkinitcpio is that mkinitcpio is
+Arch-specific, since I always try to avoid using tools limited to specific distros.
+
+[Add key file](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Adding_LUKS_keys)
+to encrypted partition.
+
+```
+cryptsetup luksAddKey /dev/disk/by-partlabel/ROOTPART /etc/cryptsetup-keys.d/root.key
+```
+
+Create `/etc/dracut.conf.d/dracut.conf`.
+
+```
+hostonly="yes"
+enhanced_cpio="yes"
+compress="cat"
+do_strip="no"
+install_optional_items+=" /etc/cryptsetup-keys.d/root.key "
+```
+
+By default, dracut will be triggered automatically after kernel update, for Arch
+it's done by [pacman hooks](https://wiki.archlinux.org/title/Pacman#Hooks)
+, for Fedora and Debian it's done by systemd
+[kernel-install(8)](https://man.archlinux.org/man/kernel-install.8), they conform
+different name conventions and install images into different locations. To uniform
+their behaviors, we disable their default actions and replace with our own.
+
+Since we want to install boot images into `/efi/linux/`, we first create our own
+dracut install script, put it into say `/usr/local/bin/dracut-install.sh`:
 
 ```
 #!/bin/bash
 set -e
+
+kver="${1}"
+kimg="/usr/lib/modules/${kver}/vmlinuz"
+[[ -f "${kimg}" ]] || kver=$(uname -r)
+kimg="/usr/lib/modules/${kver}/vmlinuz"
+vmlinuz=/efi/linux/vmlinuz
+initrd=/efi/linux/initrd
+
+install -Dm0644 "${kimg}" "${vmlinuz}"
+dracut --force --hostonly --no-hostonly-cmdline --kver "${kver}" "${initrd}"
+```
+
+Then we run it once manually to initialize boot images.
+
+Next, we modify the pacman hook for Arch and the kernel-install plugin for Fedora
+and Debian to let them trigger our script.
+
+For Arch pacman hook, create `/etc/pacman.d/hooks/90-dracut-install.hook`:
+
+```
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/lib/dracut/*
+Target = usr/lib/firmware/*
+Target = usr/src/*/dkms.conf
+Target = usr/lib/systemd/systemd
+Target = usr/bin/cryptsetup
+Target = usr/bin/lvm
+
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Target = usr/lib/modules/*/vmlinuz
+Target = usr/lib/modules/*/pkgbase
+
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = dracut
+
+[Action]
+Description = Updating initramfs with dracut
+When = PostTransaction
+Exec = /usr/local/bin/dracut-install.sh
+NeedsTargets
+```
+
+For Fedora and Debian kernel-install plugin, create
+`/etc/kernel/install.d/50-dracut.install`:
+
+```
+#!/bin/bash
+set -e
+
 [[ ${#} == 4 ]] || exit 0
-_command="${1}"
-_kernel_verion="${2}"
-_dest_dir="/boot"
-_kernel_image="${4}"
-[[ "${_command}" == "add" ]] || exit 0
-[[ -f "${_kernel_image}" ]] || exit 1
-cp -f "${_kernel_image}" "${_dest_dir}/vmlinuz-linux"
-dracut -f \
-    --kver "${_kernel_verion}" \
-    --kernel-image "${_kernel_image}" \
-    "${_dest_dir}/initramfs-linux.img"
-chmod 600 "${_dest_dir}/initramfs-linux.img"
-```
 
-<-> [Systemd-Networkd](#systemd-networkd)
+cmd="${1}"
+kver="${2}"
+dir="${3}"
+kimg="${4}"
 
-For Debian you need to move out `/etc/network/interfaces` according to
-[SystemdNetworkd - Debian Wiki](https://wiki.debian.org/SystemdNetworkd)
+[[ "${cmd}" == "add" ]] || exit 0
+[[ -f "${kimg}" ]] || exit 1
 
-```
-(root)# mv /etc/network/interfaces /etc/network/interfaces.old
+/usr/local/bin/dracut-install.sh "${kver}"
 ```
 
 ## Reboot
+
+All done. Now reboot into the new system.
+

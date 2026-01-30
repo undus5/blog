@@ -1,7 +1,7 @@
 +++
 title       = 'Linux A/B System Updates via BTRFS Snapshot'
+lastmod     = '2026-01-30'
 date        = '2025-11-05'
-lastmod     = '2025-11-26'
 tags        = []
 showSummary = true
 showTOC     = true
@@ -21,14 +21,14 @@ Inspired from Android A/B system updates mechanism.
 
 ## Preface
 
-This guide is distro irrelevant, could work on any distros.
+This guide is distro independent, could work on any distros.
 
 ## Background
 
 Things started when I was intrigued by some discussions about booting from
 [BTRFS snapshots](https://wiki.archlinux.org/title/Btrfs#Snapshots)
 directly. And before this A/B solution coming to my mind,
-I was just using following basic commands to create and remove snapshots manually.
+I was just using following commands to create and remove snapshots manually.
 
 ```
 (root)# btrfs subvolume snapshot / <destination>
@@ -37,11 +37,11 @@ I was just using following basic commands to create and remove snapshots manuall
 
 ## Principle
 
-The core idea of this A/B solutions is there are 2 subvolumes for root partition,
+The core idea of this A/B solutions is there are two subvolumes for root partition,
 `@a` and `@b`, they are mutually to be the snapshot of each other.
-And we maintain 2 bootloader entries for them respectively.
+And we maintain two bootloader entries for them respectively.
 The tricky part is you need to alter the `fstab` to make
-these 2 subvolumes point to the right ones after generating the new snapshot
+these two subvolumes point to the right ones after generating the new snapshot
 everytime.
 
 ## Subvolumes
@@ -58,11 +58,9 @@ to create subvolumes.
 (root)# btrfs subvolume create /mnt/@home
 ```
 
-If you feel strange about this `ROOTPART` label, you may read the basic
-system installation article first:
-[Bootstrap Install Any Linux Distro](/posts/bootstrap-install-any-linux-distro/).
-For simplicity, the root partition in this guide is not encrypted, which means
-LUKS is not involved.
+If you feel strange about this `ROOTPART` label, read the previous guide for
+basic system installation first. For simplicity, the root partition in this guide
+is not encrypted, which means LUKS is not involved.
 
 The nested subvolumes `@` are the real root partition, which will be mounted as
 `/`, and they also are the snapshots for each other
@@ -104,66 +102,37 @@ Be careful with the minor differences.
 
 This A/B solution can work with any bootloader, I use systemd-boot for now.
 
-Systemd-boot entry for `@a` in `/efi/loader/entries/boota.conf`:
+Systemd-boot entry for `@a` in `/efi/loader/entries/a.conf`:
 
 ```
 title Boot A
-linux /boota/vmlinuz-linux
-initrd /boota/initramfs-linux.img
+linux /a/vmlinuz
+initrd /a/initrd
 options rootflags=subvol=@a/@ quiet
 sort-key A
 ```
 
-Systemd-boot entry for `@b` in `/efi/loader/entries/bootb.conf`:
+Systemd-boot entry for `@b` in `/efi/loader/entries/b.conf`:
 
 ```
 title Boot B
-linux /bootb/vmlinuz-linux
-initrd /bootb/initramfs-linux.img
+linux /b/vmlinuz
+initrd /b/initrd
 options rootflags=subvol=@b/@ quiet
 sort-key B
-```
-
-If your system installation is followed my article 
-[Bootstrap Install Any Linux Distro](/posts/bootstrap-install-any-linux-distro/),
-you should also distinguish the `/etc/systemd/system/efistub-update.service`:
-
-EFIstub update service for `@a/@`:
-
-```
-[Unit]
-Description=Copy EFISTUB Kernel to EFI system partition
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/cp -af /boot/vmlinuz-linux /efi/boota/
-ExecStart=/usr/bin/cp -af /boot/initramfs-linux.img /efi/boota/
-```
-
-EFIstub update service for `@b/@`:
-
-```
-[Unit]
-Description=Copy EFISTUB Kernel to EFI system partition
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/cp -af /boot/vmlinuz-linux /efi/bootb/
-ExecStart=/usr/bin/cp -af /boot/initramfs-linux.img /efi/bootb/
 ```
 
 ## Bash Script
 
 All the processes can be automated into a bash script:
 
-```bash
+```
 #!/usr/bin/bash
 set -e
 
-eprintf() {
-    printf "${@}"
-    exit 1
-}
+errf() { printf "${@}" >&2 && exit 1; }
 
-[[ ${EUID} == 0 ]] || eprintf "need root priviledge\n"
+[[ ${EUID} == 0 ]] || errf "need root priviledge\n"
 
 case ${1} in
     ab)
@@ -175,54 +144,45 @@ case ${1} in
         _dstname=a
         ;;
     *)
-        eprintf "Usage: $(basename ${0}) <ab|ba>\n"
+        errf "Usage: $(basename ${0}) <ab|ba>\n"
         ;;
 esac
 
-_dstvol_alert="Warning: you are running under \`${_dstname}\` subvolume now\n"
-findmnt /${_srcname} &>/dev/null && eprintf "${_dstvol_alert}"
-findmnt /${_dstname} &>/dev/null || eprintf "${_dstvol_alert}"
+_dstvol_alert="abort: you are running under '@${_dstname}' subvolume now\n"
+findmnt /${_srcname} &>/dev/null && errf "${_dstvol_alert}"
+findmnt /${_dstname} &>/dev/null || errf "${_dstvol_alert}"
 
-printf "==> Copying kernel and initramfs from \`${_srcname}\` to \`${_dstname}\` ... "
-_stubsrc=/efi/boot${_srcname}
-_stubdst=/efi/boot${_dstname}
-_stubtmp=/efi/boott
+printf "==> Copy vmlinuz and initrd from '@${_srcname}' to '@${_dstname}'\n"
+_stubsrc=/efi/${_srcname}
+_stubdst=/efi/${_dstname}
+_stubtmp=/efi/t
 [[ -d ${_stubdst} ]] && mv ${_stubdst} ${_stubtmp}
 [[ -d ${_stubsrc} ]] && cp -r ${_stubsrc} ${_stubdst}
 [[ -d ${_stubtmp} ]] && rm -rf ${_stubtmp}
-printf " Done\n"
 
 _dstvol=/${_dstname}/@
 
-# this step makes the snapshot writable in case it is readonly
+# remove the read-only protection just in case
 [[ -d ${_dstvol} ]] && btrfs prop set -f -ts ${_dstvol} ro false
 
-printf "==> Cleaning \`${_dstname}\` snapshot ... "
+printf "==> "
 [[ -d ${_dstvol} ]] && btrfs subvolume delete ${_dstvol}
-printf " Done\n"
 
-printf "==> Creating snapshot from \`${_srcname}\` to \`${_dstname}\` ... \n"
+printf "==> "
 btrfs subvolume snapshot / ${_dstvol}
 
-printf "==> Tweaking \`${_dstname}\` fstab ... "
+printf "==> Modify fstab in '/${_dstname}/@'\n"
 sed -i -r \
     -e "s#/${_dstname}#/${_srcname}#" \
     -e "s#@${_dstname}\s+0#@${_srcname}   0#" \
     -e "s#@${_srcname}/@#@${_dstname}/@#" \
     ${_dstvol}/etc/fstab
-printf " Done\n"
 
-printf "==> Tweaking \`${_dstname}\` efistub-update.service ... "
-sed -i "s/boot${_srcname}/boot${_dstname}/" \
-    ${_dstvol}/etc/systemd/system/efistub-update.service
-printf " Done\n"
-
-printf "==> Updating timestamp ... \n"
-rm /${_dstname}/*.txt
 _time=$(date +%Y%m%d.%H%M%S)
 _timetxt=/${_dstname}/timestamp.${_time}.txt
+rm /${_dstname}/*.txt
 printf "${_time}\n" > ${_timetxt}
-printf "Saved ${_timetxt}\n"
+printf "==> Create ${_timetxt}\n"
 ```
 
 ## Cache Clean
@@ -242,8 +202,9 @@ Clean package cache:
 [pacman](https://wiki.archlinux.org/title/Pacman#Cleaning_the_package_cache):
 `paccache -r && paccache -ruk0`
 
-[apt](https://man.archlinux.org/man/apt-get.8.en):
+[dnf-clean(8)](https://man.archlinux.org/man/dnf5-clean.8.en):
+`dnf clean packages`
+
+[apt(8)](https://man.archlinux.org/man/apt.8.en):
 `apt autoremove && apt autoclean`
 
-[dnf](https://man.archlinux.org/man/dnf5-clean.8.en):
-`dnf clean packages`

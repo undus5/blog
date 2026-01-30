@@ -136,53 +136,53 @@ errf() { printf "${@}" >&2 && exit 1; }
 
 case ${1} in
     ab)
-        _srcname=a
-        _dstname=b
+        srcname=a
+        dstname=b
         ;;
     ba)
-        _srcname=b
-        _dstname=a
+        srcname=b
+        dstname=a
         ;;
     *)
         errf "Usage: $(basename ${0}) <ab|ba>\n"
         ;;
 esac
 
-_dstvol_alert="abort: you are running under '@${_dstname}' subvolume now\n"
-findmnt /${_srcname} &>/dev/null && errf "${_dstvol_alert}"
-findmnt /${_dstname} &>/dev/null || errf "${_dstvol_alert}"
+dstvol_alert="Abort: you are running under '@${dstname}' subvolume now\n"
+findmnt /${srcname} &>/dev/null && errf "${dstvol_alert}"
+findmnt /${dstname} &>/dev/null || errf "${dstvol_alert}"
 
-printf "==> Copy vmlinuz and initrd from '@${_srcname}' to '@${_dstname}'\n"
-_stubsrc=/efi/${_srcname}
-_stubdst=/efi/${_dstname}
-_stubtmp=/efi/t
-[[ -d ${_stubdst} ]] && mv ${_stubdst} ${_stubtmp}
-[[ -d ${_stubsrc} ]] && cp -r ${_stubsrc} ${_stubdst}
-[[ -d ${_stubtmp} ]] && rm -rf ${_stubtmp}
+printf "==> Copy vmlinuz and initrd from '@${srcname}' to '@${dstname}'\n"
+stubsrc=/efi/${srcname}
+stubdst=/efi/${dstname}
+stubtmp=/efi/t
+[[ -d ${stubdst} ]] && mv ${stubdst} ${stubtmp}
+[[ -d ${stubsrc} ]] && cp -r ${stubsrc} ${stubdst}
+[[ -d ${stubtmp} ]] && rm -rf ${stubtmp}
 
-_dstvol=/${_dstname}/@
+dstvol=/${dstname}/@
 
 # remove the read-only protection just in case
-[[ -d ${_dstvol} ]] && btrfs prop set -f -ts ${_dstvol} ro false
+[[ -d ${dstvol} ]] && btrfs prop set -f -ts ${dstvol} ro false
 
 printf "==> "
-[[ -d ${_dstvol} ]] && btrfs subvolume delete ${_dstvol}
+[[ -d ${dstvol} ]] && btrfs subvolume delete ${dstvol}
 
 printf "==> "
-btrfs subvolume snapshot / ${_dstvol}
+btrfs subvolume snapshot / ${dstvol}
 
-printf "==> Modify fstab in '/${_dstname}/@'\n"
+printf "==> Modify fstab in '/${dstname}/@'\n"
 sed -i -r \
-    -e "s#/${_dstname}#/${_srcname}#" \
-    -e "s#@${_dstname}\s+0#@${_srcname}   0#" \
-    -e "s#@${_srcname}/@#@${_dstname}/@#" \
-    ${_dstvol}/etc/fstab
+    -e "s#/${dstname}#/${srcname}#" \
+    -e "s#@${dstname}\s+0#@${srcname}   0#" \
+    -e "s#@${srcname}/@#@${dstname}/@#" \
+    ${dstvol}/etc/fstab
 
-_time=$(date +%Y%m%d.%H%M%S)
-_timetxt=/${_dstname}/timestamp.${_time}.txt
-rm /${_dstname}/*.txt
-printf "${_time}\n" > ${_timetxt}
-printf "==> Create ${_timetxt}\n"
+time=$(date +%Y%m%d.%H%M%S)
+timetxt=/${dstname}/timestamp.${time}.txt
+rm /${dstname}/*.txt
+printf "${time}\n" > ${timetxt}
+printf "==> Create ${timetxt}\n"
 ```
 
 ## Cache Clean

@@ -98,6 +98,11 @@ Arch Intel: `mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver`
 For Fedora, it seems these drivers and firmwares are bundled with core package
 group.
 
+Use [mpv](https://wiki.archlinux.org/title/Mpv#Hardware_video_acceleration)
+to test
+[hardware acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
+, with command `mpv --hwdec=auto <videofile>`
+
 ## GUI Fonts
 
 Install Noto fonts related packages:

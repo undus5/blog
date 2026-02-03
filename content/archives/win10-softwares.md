@@ -24,7 +24,7 @@ weight      = 9100
 | Image Editor | [Paint.NET](https://github.com/paintdotnet/release/releases) |
 | PDF Viewer | [Sumatra PDF](https://www.sumatrapdfreader.org/free-pdf-reader) |
 | Video Player | [MPC-HC](https://github.com/clsid2/mpc-hc) |
-| Notepad Alternative | [EmEditor](https://www.emeditor.com/download/) |
+| Notepad Alternative | [NotepadNext](https://github.com/dail8859/NotepadNext) |
 | Screenshot | [Snipaste](https://www.snipaste.com/) |
 | Disk Info | [Crystal Disk](https://crystalmark.info/en/download) |
 | Web Browser | [Ungoogled Chromium](https://ungoogled-software.github.io/ungoogled-chromium-binaries/) , [Brave Browser](https://brave.com/) , [Chrome Enterprise](https://chromeenterprise.google) |

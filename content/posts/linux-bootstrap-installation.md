@@ -465,7 +465,7 @@ dracut install script, put it into say `/usr/local/bin/dracut-install.sh`:
 #!/bin/bash
 
 kver="${1}"
-kdir="${2}"
+dest="${2}"
 kimg="/usr/lib/modules/${kver}/vmlinuz"
 [[ -f "${kimg}" ]] || exit 1
 
@@ -477,7 +477,7 @@ dracut-install() {
     dracut --force --hostonly --no-hostonly-cmdline --kver "${kver}" "${initrd}"
 }
 
-[[ -d "${kdir}" ]] && dracut-install "${kdir}" && exit 0
+[[ -d "${dest}" ]] && dracut-install "${dest}" && exit 0
 dracut-install /efi/linux
 ```
 
@@ -553,7 +553,7 @@ For Fedora and Debian kernel-install plugin, create
 
 cmd="${1}"
 kver="${2}"
-dir="${3}"
+dest="${3}"
 kimg="${4}"
 
 [[ "${cmd}" == "add" ]] || exit 0

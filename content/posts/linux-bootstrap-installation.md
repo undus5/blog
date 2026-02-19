@@ -463,17 +463,22 @@ dracut install script, put it into say `/usr/local/bin/dracut-install.sh`:
 
 ```
 #!/bin/bash
-set -e
 
 kver="${1}"
+kdir="${2}"
 kimg="/usr/lib/modules/${kver}/vmlinuz"
-[[ -f "${kimg}" ]] || kver=$(uname -r)
-kimg="/usr/lib/modules/${kver}/vmlinuz"
-vmlinuz=/efi/linux/vmlinuz
-initrd=/efi/linux/initrd
+[[ -f "${kimg}" ]] || exit 1
 
-install -Dm0644 "${kimg}" "${vmlinuz}"
-dracut --force --hostonly --no-hostonly-cmdline --kver "${kver}" "${initrd}"
+dracut-install() {
+    local stubdir="${1}"
+    local vmlinuz=${stubdir}/vmlinuz
+    local initrd=${stubdir}/initrd
+    install -Dm0644 "${kimg}" "${vmlinuz}"
+    dracut --force --hostonly --no-hostonly-cmdline --kver "${kver}" "${initrd}"
+}
+
+[[ -d "${kdir}" ]] && dracut-install "${kdir}" && exit 0
+dracut-install /efi/linux
 ```
 
 Then we run it once manually to initialize boot images.
@@ -512,8 +517,30 @@ Target = dracut
 [Action]
 Description = Updating initramfs with dracut
 When = PostTransaction
-Exec = /usr/local/bin/dracut-install.sh
+Exec = /etc/pacman.d/scripts/dracut-install-alpm.sh
 NeedsTargets
+```
+
+Then create `/etc/pacman.d/scripts/dracut-install-alpm.sh`:
+
+```
+#!/bin/bash
+
+# If KERNEL_INSTALL_INITRD_GENERATOR is set, disable this hook
+if [ -n "$KERNEL_INSTALL_INITRD_GENERATOR" ]; then
+    exit 0
+fi
+
+while read -r line; do
+    if [[ "$line" == 'usr/lib/modules/'+([^/])'/pkgbase' ]]; then
+        read -r pkgbase < "/${line}"
+        kver="${line#'usr/lib/modules/'}"
+        kver="${kver%'/pkgbase'}"
+
+        echo "--> Building initramfs for ${pkgbase} (${kver})"
+        /usr/local/bin/dracut-install.sh "${kver}"
+    fi
+done
 ```
 
 For Fedora and Debian kernel-install plugin, create
@@ -521,7 +548,6 @@ For Fedora and Debian kernel-install plugin, create
 
 ```
 #!/bin/bash
-set -e
 
 [[ ${#} == 4 ]] || exit 0
 

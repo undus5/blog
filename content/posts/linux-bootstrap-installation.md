@@ -1,7 +1,7 @@
 +++
 title       = 'Linux Bootstrap Installation'
 aliases     = ["/posts/bootstrap-install-any-linux-distro/"]
-lastmod     = '2026-01-30'
+lastmod     = '2026-02-19'
 date        = '2025-10-19'
 tags        = []
 showTOC     = true

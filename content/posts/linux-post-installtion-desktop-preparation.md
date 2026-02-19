@@ -40,7 +40,7 @@ Arch: terminus-fonts\
 Fedora: terminus-fonts-console
 
 ```
-(root)# echo "FONT=ter-122b" >> /etc/vconsole.conf
+(root)# echo "FONT=ter-120b" >> /etc/vconsole.conf
 ```
 
 Full font list:

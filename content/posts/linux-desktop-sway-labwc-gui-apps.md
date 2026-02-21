@@ -1,6 +1,6 @@
 +++
 title       = 'Linux Desktop: Sway, Labwc, GUI Apps'
-lastmod     = '2026-01-30'
+lastmod     = '2026-02-21'
 date        = '2025-11-30'
 tags        = []
 showSummary = true
@@ -74,6 +74,67 @@ That's all. Just keep it simple and clean.
 I prefer [foot](https://codeberg.org/dnkl/foot) and
 [alacritty](https://alacritty.org/),
 both are simple and fast terminal emulators.
+
+## GTK Theme
+
+For GTK 4:
+
+```
+(user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+(user)$ gsettings set org.gnome.desktop.interface color-scheme default
+```
+
+For GTK 3, install `gnome-themes-extra` package:
+
+```
+(user)$ ls /usr/share/themes
+(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
+```
+
+Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_theme_configuration)
+, [GTK 3 settings on Wayland](https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland)
+
+## Qt Theme
+
+IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
+KDE replated components, since they are tightly coupled with the KDE framework,
+lots of dependencies would be installed even for a very simple package like
+[breeze-icons](https://github.com/KDE/breeze-icons/), which is annoying.
+LXQt is in a similar situation.
+
+The original
+[qt6ct](https://github.com/trialuser02/qt6ct)
+is archived, although there is a
+[successor](https://www.opencode.net/trialuser/qt6ct), I decided not dealing with
+KDE apps anymore. For other independent Qt apps, they usually work well by default,
+no need tools like qt5ct/qt6ct get involved.
+
+## Icon Theme
+
+Install the fallback
+[icon theme](https://wiki.archlinux.org/title/Icons) `hicolor-icon-theme`.
+
+If you want to add custom icons, create `~/.local/share/icons/hicolor/`, put
+your icons into corresponding size directories such as `.../hicolor/128x128/apps/`.
+
+Ref: [Icon Theme Specification](https://specifications.freedesktop.org/icon-theme/latest/#directory_layout).
+
+If you want to use Breeze icon theme, just download the repo manually:
+
+```
+(user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
+(user)$ cp -r ~/Downloads/breeze-icons/icons ~/.local/share/icons/Breeze
+(user)$ cd ~/.local/share/icons/Breeze
+(user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
+```
+
+Change GTK icon theme
+
+```
+(user)$ ls /usr/share/icons
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
+```
 
 ## File Manager
 
@@ -179,26 +240,35 @@ You may also want to disable "Recent Files":
 I recommend [PeaZip](https://peazip.github.io/) as GUI archive manager.
 
 Install dependency package `qt6pas` first.
-Then download peazip tarball and extract to e.g. `/data/apps/peazip`,
-use `/data/apps/peazip/res/share/batch/freedesktop_integration/peazip.desktop`
-as template to create 2 desktop entries in `~/.local/share/applications/`:
+Then download peazip tarball and extract to, say `~/apps/peazip`,
+then use `~/apps/peazip/res/share/batch/freedesktop_integration/peazip.desktop`
+as template to create desktop entries under `~/.local/share/applications/`:
 
 `peazip-extract-newfolder.desktop`:
 
 ```
 Name=PeaZip Extract Smart
-Exec=/data/apps/peazip/peazip -ext2folder %F
-Icon=/data/apps/peazip/res/icons/peazip
+Exec=bash -c '~/apps/peazip/peazip -ext2folder %F'
+Icon=peazip_extract
 ```
 
 `peazip-add-archive.desktop`:
 
 ```
 Name=PeaZip Add Archive
-Exec=/data/apps/peazip/peazip -add2archive %F
-Icon=/data/apps/peazip/res/icons/peazip
+Exec=bash -c '~/apps/peazip/peazip -add2archive %F'
+Icon=peazip_add
 MimeType=application/octet-stream;
 ```
+
+`Exec=` needs absolute path if provided, but here we did a little trick to avoid
+hardcoding user home directory, by using
+[bash(1)](https://man.archlinux.org/man/bash.1) to expand `~`.
+
+Ref: [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry/latest/exec-variables.html)
+
+There're more desktop entry examples in
+`~/apps/peazip/res/share/batch/freedesktop_integration/additional-desktop-files`.
 
 Apply change:
 
@@ -244,63 +314,6 @@ The launching command `fcitx5 -d -r` needs
 to be added into autostart script for Sway and Labwc.
 
 Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
-
-## GTK Theme
-
-For GTK 4:
-
-```
-(user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark
-(user)$ gsettings set org.gnome.desktop.interface color-scheme default
-```
-
-For GTK 3, install `gnome-themes-extra` package:
-
-```
-(user)$ ls /usr/share/themes
-(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
-(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
-```
-
-Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_theme_configuration)
-, [GTK 3 settings on Wayland](https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland)
-
-## Qt Theme
-
-IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
-KDE replated components, since they are tightly coupled with the KDE framework,
-lots of dependencies would be installed even for a very simple package like
-[breeze-icons](https://github.com/KDE/breeze-icons/), which is annoying.
-LXQt is in a similar situation.
-
-The original
-[qt6ct](https://github.com/trialuser02/qt6ct)
-is archived, although there is a
-[successor](https://www.opencode.net/trialuser/qt6ct), I decided not dealing with
-KDE apps anymore. For other independent Qt apps, they usually work well by default,
-no need tools like qt5ct/qt6ct get involved.
-
-## Icon Theme
-
-Install basic
-[icons](https://wiki.archlinux.org/title/Icons)
-theme: `hicolor-icon-theme`.
-
-If you want to use Breeze icon theme, just download the repo manually:
-
-```
-(user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
-(user)$ cp -r ~/Downloads/breeze-icons/icons ~/.local/share/icons/Breeze
-(user)$ cd ~/.local/share/icons/Breeze
-(user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
-```
-
-Change GTK icon theme
-
-```
-(user)$ ls /usr/share/icons
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
-```
 
 ## Other Apps
 

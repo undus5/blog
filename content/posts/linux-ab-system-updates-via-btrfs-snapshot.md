@@ -16,7 +16,7 @@ Inspired from Android A/B system updates mechanism.
 
 1. [Linux Bootstrap Installation](/posts/linux-bootstrap-installation/)
 2. Linux A/B System Updates via BTRFS Snapshot
-3. [Linux Post Installation: Desktop Preparation](/posts/linux-post-installtion-desktop-preparation/)
+3. [Linux Post Installation](/posts/linux-post-installtion/)
 4. [Linux Desktop: Sway, Labwc, GUI Apps](/posts/linux-desktop-sway-labwc-gui-apps/)
 
 ## Preface

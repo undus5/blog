@@ -16,7 +16,7 @@ You only need a window manager to do your work.
 
 1. [Linux Bootstrap Installation](/posts/linux-bootstrap-installation/)
 2. [Linux A/B System Updates via BTRFS Snapshot](/posts/linux-ab-system-updates-via-btrfs-snapshot/)
-3. [Linux Post Installation: Desktop Preparation](/posts/linux-post-installtion-desktop-preparation/)
+3. [Linux Post Installation](/posts/linux-post-installtion/)
 4. Linux Desktop: Sway, Labwc, GUI Apps
 
 ## Preface
@@ -28,6 +28,83 @@ If you prefer keyboard navigation, then use Sway,
 if you prefer using mouse to point and click, then then Labwc.
 
 This guide is distro independent, tested on Arch and Fedora.
+
+## Regular User
+
+Install [xdg-user-dirs](https://wiki.archlinux.org/title/XDG_user_directories)
+package, it's for managing well known user directories
+e.g. Desktop, Documents, Downloads etc.
+
+Create regular user:
+
+```
+(root)# useradd -G wheel user1
+(root)# passwd user1
+```
+
+`wheel` is the superuser group for sudo in Arch and Fedora, for Debian,
+it's named `sudo`.
+
+## GUI Fonts
+
+Install Noto fonts related packages:
+
+Arch: `noto-fonts noto-fonts-cjk noto-fonts-emoji`
+
+Fedora:\
+`google-noto-fonts-all google-noto-color-emoji-fonts`\
+`google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts`
+
+The default lookup order for CJK fonts would pick wrong characters in some cases,
+such as “复” in chinese word “复制”.
+To fix this, adjust fallback font order by creating `/etc/fonts/local.conf` with:
+
+```
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+<fontconfig>
+<alias>
+    <family>sans-serif</family>
+    <prefer>
+        <family>Noto Sans</family>
+        <family>Noto Sans CJK SC</family>
+        <family>Noto Sans CJK TC</family>
+        <family>Noto Sans CJK HK</family>
+        <family>Noto Sans CJK JP</family>
+        <family>Noto Sans CJK KR</family>
+    </prefer>
+</alias>
+<alias>
+    <family>monospace</family>
+    <prefer>
+        <family>Noto Sans Mono</family>
+        <family>Noto Sans Mono CJK SC</family>
+        <family>Noto Sans Mono CJK TC</family>
+        <family>Noto Sans Mono CJK HK</family>
+        <family>Noto Sans Mono CJK JP</family>
+        <family>Noto Sans Mono CJK KR</family>
+    </prefer>
+</alias>
+<alias>
+    <family>serif</family>
+    <prefer>
+        <family>Noto Serif</family>
+        <family>Noto Serif CJK SC</family>
+        <family>Noto Serif CJK TC</family>
+        <family>Noto Serif CJK HK</family>
+        <family>Noto Serif CJK JP</family>
+        <family>Noto Serif CJK KR</family>
+    </prefer>
+</alias>
+</fontconfig>
+```
+
+Later you could create `~/.config/fontconfig/fonts.conf` with same format under
+your user home directory to overwrite this configuration,
+and put your custom fonts into `~/.local/share/fonts/`.
+
+Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
+, [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)
 
 ## Sway Labwc
 

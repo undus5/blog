@@ -6,12 +6,8 @@ hidden      = true
 weight      = 9300
 +++
 
-[HBR1](http://www.hbr1.com/) Music Radio
-
-[Hacker News](https://news.ycombinator.com/)
-
 [Hackaday](https://hackaday.com/)
-, [HackSpace](https://hackspace.raspberrypi.com/)
+, [HackSpace](https://magazine.raspberrypi.com/)
 , [CNX Software](https://www.cnx-software.com/)
 
 [Free Magazines Online](https://freemagazines.top/)

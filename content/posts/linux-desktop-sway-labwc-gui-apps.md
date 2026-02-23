@@ -1,6 +1,6 @@
 +++
 title       = 'Linux Desktop: Sway, Labwc, GUI Apps'
-lastmod     = '2026-02-21'
+lastmod     = '2026-02-23'
 date        = '2025-11-30'
 tags        = []
 showSummary = true
@@ -99,9 +99,15 @@ To fix this, adjust fallback font order by creating `/etc/fonts/local.conf` with
 </fontconfig>
 ```
 
-Later you could create `~/.config/fontconfig/fonts.conf` with same format under
-your user home directory to overwrite this configuration,
-and put your custom fonts into `~/.local/share/fonts/`.
+Later you could add custom fonts under user home directory
+`~/.local/share/fonts/`, then create `~/.config/fontconfig/fonts.conf`
+with same format to override default fonts. Use
+[fc-cache(1)](https://man.archlinux.org/man/fc-cache.1) to rebuild font cache,
+use [fc-list(1)](https://man.archlinux.org/man/fc-list.1) to check whether
+custom font families are applied correctly.
+Noto font families are good as default fallback options, but for monospace fonts
+I prefer [Jetbrains Mono](https://www.jetbrains.com/lp/mono/), for CJK fonts
+I prefer [IBM Plex](https://github.com/IBM/plex).
 
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)
@@ -112,7 +118,7 @@ Install [Sway](https://wiki.archlinux.org/title/Sway),
 [Labwc](https://wiki.archlinux.org/title/Labwc) and other essential packages:
 
 ```
-sway swaylock swaybg labwc wl-clipboard wmenu mako wob kanshi grim wev
+sway swaylock swaybg labwc wl-clipboard wmenu fuzzel mako wob kanshi grim wev
 xdg-desktop-portal-gtk
 ```
 
@@ -120,6 +126,7 @@ xdg-desktop-portal-gtk
 xdg-desktop-portal-gtk : necessary component for e.g. file chooser.\
 [wl-clipboard](https://github.com/bugaevc/wl-clipboard) : necessary for ctrl-c ctrl-v function.\
 [wmenu](https://codeberg.org/adnano/wmenu) : menu for launching apps and running commands.\
+[fuzzel](https://codeberg.org/dnkl/fuzzel) : app launcher (desktop entry)\
 [mako](https://github.com/emersion/mako) : desktop notification.\
 [wob](https://github.com/francma/wob) : indicator bar for volume or brightness.\
 [kanshi](https://gitlab.freedesktop.org/emersion/kanshi): dynamic output configuration.\
@@ -354,6 +361,7 @@ Apply change:
 ```
 
 Ref: [Desktop entries](https://wiki.archlinux.org/title/Desktop_entries)
+, [Registered Categories](https://specifications.freedesktop.org/menu/latest/category-registry.html#main-category-registry)
 
 Also recommend installing `7zip` package for zip/unzip in command line.
 

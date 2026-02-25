@@ -36,7 +36,7 @@ name       = "MOOD"
 weight     = 3
 
 [[menus.footer]]
-name        = "🄯2023-2025"
+name        = "🄯2023-2026"
 weight      = 1
 [menus.footer.params]
 type = "plain"

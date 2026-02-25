@@ -16,7 +16,7 @@ Build a compact workstation with essential components, no ricing.
 ## Update
 
 This article is no longer maintained, please refer to the new one:
-[Linux Post Installation: Desktop Preparation](/posts/linux-post-installtion-desktop-preparation/).
+[Linux Post Installation](/posts/linux-post-installtion/).
 
 ## Prerequisite
 

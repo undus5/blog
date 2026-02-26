@@ -740,7 +740,7 @@ done;
 The minimal unit for PCI passthrough is IOMMU group, so if your GPU is under
 the same group with other devices, maybe consider to replace the motherboard
 to a IOMMU friendly one, such as X570 series for AM4 socket or refer to
-https://iommu.info.
+https://iommu.info, https://www.reddit.com/r/VFIO/.
 
 To isolate and bind GPU device, remeber GPU device and corresponding
 audio device's IDs, they are look like `[10de:1d02]`, add them to
@@ -783,7 +783,14 @@ Apply new rules:
 (root)# udevadm control -R && udevadm trigger
 ```
 
+Without this udev rule you would encounter errors like:
+
+```
+failed to open /dev/vfio/62 Permission denied
+```
+
 Ref: [Udev Rules](#udev-rules)
+, [Run qemu without root for vga passthrough?](https://bbs.archlinux.org/viewtopic.php?id=206358)
 
 Second, remove `memlock` limit for regular user via `/etc/security/limits.conf`:
 

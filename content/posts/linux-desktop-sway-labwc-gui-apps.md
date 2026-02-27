@@ -105,9 +105,16 @@ with same format to override default fonts. Use
 [fc-cache(1)](https://man.archlinux.org/man/fc-cache.1) to rebuild font cache,
 use [fc-list(1)](https://man.archlinux.org/man/fc-list.1) to check whether
 custom font families are applied correctly.
-Noto font families are good as default fallback options, but for monospace fonts
-I prefer [Jetbrains Mono](https://www.jetbrains.com/lp/mono/), for CJK fonts
-I prefer [IBM Plex](https://github.com/IBM/plex).
+
+Noto font families are good as system level fallback options, but there're
+preferred ones for customization:
+
+Sans: [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/)
+This font family has clear distinguishable `0iIoO`.\
+Sans CJK: [IBM Plex SC/TC/JP/KR](https://github.com/IBM/plex)\
+Mono: [Jetbrains Mono](https://www.jetbrains.com/lp/mono/)
+Great for programming and terminal.\
+Mono CJK: [Maple Mono](https://github.com/subframe7536/maple-font)
 
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)

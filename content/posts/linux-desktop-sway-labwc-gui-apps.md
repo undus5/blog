@@ -339,7 +339,7 @@ as template to create desktop entries under `~/.local/share/applications/`:
 
 ```
 Name=PeaZip Extract Smart
-Exec=bash -c '~/apps/peazip/peazip -ext2folder %F'
+Exec=bash -c '~/apps/peazip/peazip -ext2folder "$@"' peazip %F
 Icon=peazip_extract
 ```
 
@@ -347,7 +347,7 @@ Icon=peazip_extract
 
 ```
 Name=PeaZip Add Archive
-Exec=bash -c '~/apps/peazip/peazip -add2archive %F'
+Exec=bash -c '~/apps/peazip/peazip -add2archive "$@"' peazip %F
 Icon=peazip_add
 MimeType=application/octet-stream;
 ```

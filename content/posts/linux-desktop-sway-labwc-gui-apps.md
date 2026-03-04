@@ -152,7 +152,10 @@ to track which workspaces are in use, so I choose built-in swaybar to do this wo
 
 Unfortunately, swaybar is lacking system tray support. But I think it's not a big
 problem, you don't really need it, if you want some apps running in the background,
-just throw them into a dedicated workspace in the corner and forget, done.
+just throw them into a dedicated workspace in the corner. Some apps may keep
+running in the background when you click the cross button, such as Steam, make
+sure exit from the main menu; some apps may offer options to disable background
+running, such as Telegram.
 
 For Labwc, there isn't much to say, all the actions can be invoked from the
 right-click context menu. Since it's mouse driven and floating, single workspace

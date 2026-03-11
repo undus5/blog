@@ -27,7 +27,7 @@ Want to stop distro hopping? Sure, just go read through the
 I'm not selling Arch Linux to you, just the wiki. The reason you always be 
 distracted by shining fancy components from some new releases
 or emerging distros, is that you don't have a big picture about linux and
-its ecosystem, and you haven't figure out what do you really need.
+its ecosystem, and you haven't figure out what you really need.
 This is the most thing I learned after reading through the wiki.
 When I finished reading, I learned what choices are there, and found my needs,
 then built my own configurations.

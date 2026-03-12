@@ -183,7 +183,7 @@ For Fedora it's DNF:
 (root)# dnf --use-host-config --releasever=43 --installroot=/mnt group install core
 (root)# dnf --use-host-config --releasever=43 --installroot=/mnt install \
     kernel linux-firmware dracut zram-generator systemd-boot cryptsetup \
-    glibc-langpack-en btrfs-progs vim amd-ucode-firmware
+    glibc-langpack-en btrfs-progs vim amd-ucode-firmware iwlwifi-mvm-firmware
 ```
 
 For Debian it's [Debootstrap](https://wiki.debian.org/Debootstrap):

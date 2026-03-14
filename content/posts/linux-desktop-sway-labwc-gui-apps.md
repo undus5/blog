@@ -1,6 +1,6 @@
 +++
 title       = 'Linux Desktop: Sway, Labwc, GUI Apps'
-lastmod     = '2026-02-23'
+lastmod     = '2026-03-14'
 date        = '2025-11-30'
 tags        = []
 showSummary = true
@@ -422,7 +422,18 @@ Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 | Audiobook Player | [cozy](https://cozy.sh/) | - |
 | Text to QR Code | qrencode | - |
 | QR Code to Text | zbar | zbar-tools |
-| Web Browser | chromium [brave](https://brave.com/linux/) | - |
+| Web Browser | [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [brave](https://brave.com/linux/) | - |
+
+Ungoogled Chromium initialization:
+
+Go to chrome://flags, search for `#extension-mime-request-handling` flag
+and set it to `Always prompt for install`, then download and install extension
+[chromium-web-store](https://github.com/NeverDecaf/chromium-web-store),
+without changing the flag ahead, you will encounter error
+"Package is invalid: CRX_REQUIRED_PROOF_MISSING".
+
+Another useful flag is `#disable-top-sites`, which can disable recently viewed
+sites for the new tab page.
 
 Brave disable Crypto and AI related components via
 [Group Policy](https://support.brave.com/hc/en-us/articles/360039248271-Group-Policy):
@@ -441,6 +452,8 @@ Create `/etc/brave/policies/managed/brave-policy.json` :
 ```
 
 Visit `brave://policy` from address bar to check the effect.
+
+## More Apps
 
 For more apps, refer to: [Useful add ons for sway](https://github.com/swaywm/sway/wiki/Useful-add-ons-for-sway).
 

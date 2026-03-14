@@ -430,7 +430,8 @@ Go to chrome://flags, search for `#extension-mime-request-handling` flag
 and set it to `Always prompt for install`, then download and install extension
 [chromium-web-store](https://github.com/NeverDecaf/chromium-web-store),
 without changing the flag ahead, you will encounter error
-"Package is invalid: CRX_REQUIRED_PROOF_MISSING".
+"Package is invalid: CRX_REQUIRED_PROOF_MISSING". Pin the extension badge in
+toolbar and clicking it to update extensions.
 
 Another useful flag is `#disable-top-sites`, which can disable recently viewed
 sites for the new tab page.

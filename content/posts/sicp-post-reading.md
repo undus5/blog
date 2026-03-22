@@ -15,8 +15,9 @@ I just finished reading the book, Structure and Interpretation of Computer
 Programs, aka SICP, not the original one, but the JavaScript Edition, took me
 about 4 months. I started from the original version, but kept feeling frustrated
 about the syntax of Scheme and those outdated jargons, so I switched to the
-JS Edition since the middle part of chapter two, it's much easier to read,
-although I don't kinda like JavaScript.
+JS edition since the middle part of chapter two, it's way better to read.
+The JS edition is almost the same but replacing Scheme with JavaScript and using
+modern terms.
 
 So what did I learn? Can't say there's a lot to be honest, because I didn't
 remember much about the examples from the book, but truly got something.

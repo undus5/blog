@@ -215,7 +215,15 @@ your icons into corresponding size directories such as `.../hicolor/128x128/apps
 
 Ref: [Icon Theme Specification](https://specifications.freedesktop.org/icon-theme/latest/#directory_layout).
 
-If you want to use Breeze icon theme, just download the repo manually:
+Set GTK app icon theme:
+
+```
+(user)$ ls /usr/share/icons
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
+```
+
+If you want to use [breeze-icons](https://github.com/KDE/breeze-icons)
+independently, you can manually download it from the repo:
 
 ```
 (user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
@@ -224,12 +232,8 @@ If you want to use Breeze icon theme, just download the repo manually:
 (user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
 ```
 
-Change GTK icon theme
-
-```
-(user)$ ls /usr/share/icons
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
-```
+Recommended icon theme:
+[Qogir-icon-theme](https://github.com/vinceliuice/Qogir-icon-theme)
 
 ## Mouse Cursor Theme
 

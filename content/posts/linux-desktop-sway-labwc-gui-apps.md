@@ -238,9 +238,9 @@ The location for mouse cursor themes is same as icons themes, see above section.
 Set cursor theme and size for sway in `~/.config/sway/config`:
 
 ```
-seat seat0 xcursor_theme default 32
-# or
-seat seat0 xcursor_theme Bibata-Modern-Ice 24
+# seat <name> xcursor_theme <theme> [<size>]
+seat seat0 xcursor_theme default 24
+seat seat0 xcursor_theme Bibata-Modern-Ice 28
 ```
 
 Ref: [sway-input(5)](https://man.archlinux.org/man/sway-input.5.en)
@@ -249,7 +249,7 @@ Set cursor theme and size for labwc in `~/.config/labwc/environment`:
 
 ```
 XCURSOR_THEME=Bibata-Modern-Ice
-XCURSOR_SIZE=24
+XCURSOR_SIZE=28
 ```
 
 Ref: [labwc-config(5)](https://labwc.github.io/labwc-config.5.html)

@@ -207,9 +207,10 @@ no need tools like qt5ct/qt6ct get involved.
 ## Icon Theme
 
 Install the fallback
-[icon theme](https://wiki.archlinux.org/title/Icons) `hicolor-icon-theme`.
+[icon theme](https://wiki.archlinux.org/title/Icons) `hicolor-icon-theme` first.
 
-If you want to add custom icons, create `~/.local/share/icons/hicolor/`, put
+Custom icons can be put under `~/.local/share/icons/` or `~/.icons`,
+for example, create `~/.local/share/icons/hicolor/`, put
 your icons into corresponding size directories such as `.../hicolor/128x128/apps/`.
 
 Ref: [Icon Theme Specification](https://specifications.freedesktop.org/icon-theme/latest/#directory_layout).
@@ -229,6 +230,31 @@ Change GTK icon theme
 (user)$ ls /usr/share/icons
 (user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
 ```
+
+## Mouse Cursor Theme
+
+The location for mouse cursor themes is same as icons themes, see above section.
+
+Set cursor theme and size for sway in `~/.config/sway/config`:
+
+```
+seat seat0 xcursor_theme default 32
+# or
+seat seat0 xcursor_theme Bibata-Modern-Ice 24
+```
+
+Ref: [sway-input(5)](https://man.archlinux.org/man/sway-input.5.en)
+
+Set cursor theme and size for labwc in `~/.config/labwc/environment`:
+
+```
+XCURSOR_THEME=Bibata-Modern-Ice
+XCURSOR_SIZE=24
+```
+
+Ref: [labwc-config(5)](https://labwc.github.io/labwc-config.5.html)
+
+Recommended cursor theme: [Bibata_Cursor](https://github.com/ful1e5/Bibata_Cursor)
 
 ## File Manager
 

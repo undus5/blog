@@ -1,0 +1,59 @@
++++
+title       = 'OSTEP Post Reading'
+date        = '2026-04-23'
+lastmod     = '2026-04-23'
+tags        = []
+showSummary = true
+showTOC     = true
+weight      = 1000
+draft       = false
+hidden      = false
++++
+
+Now I can imagine what happens behind the scene of every click.
+
+<!--more-->
+
+Operating Systems: Three Easy Pieces, or
+[OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/),
+in fact I've heard about it before
+[teachyourselfcs.com](https://teachyourselfcs.com), and tried to read it once
+since I was tinkering with Linux and wanted to dig deeper. The book
+suggests readers to read CSAPP first at the very beginning in the introduction
+chapter, I just ignored and kept reading, then I realized I could barely follow,
+hehe ... So don't be arrogant, take some advices, and be patient,
+Rome wasn't built in one day.
+
+OSTEP is like an extended version of the last part of CSAPP, but from a
+different perspective, I would call it a system designer's perspective.
+It's also a pragmatic version, since the examples in the book are based on
+real systems.
+
+The most important thing I got from the reading is it helped me consolidating
+this common framework in my head to understand computer system, which is,
+there's always a giant byte array, you create some data structure to manage it,
+with some header blocks following with data blocks or so, and there's always a
+cache layer sit between some components for the sake of performance, according
+to spatial or temporal locality.
+
+It also reveiled how things work under the hood about something I've already
+used before or something I've heard from tech news, such as shell
+redirection, segmentation fault, thread-safe, copy-on-write, defragmentation,
+TLC/QLC in SSD etc.
+
+There's a 4th piece beyond the "three easy pieces" which is about security
+I have to mention, it's not written by the main authors, and I skipped it
+because of the long-winded and repetitive written, painful to read, which is a
+pity, not recommended.
+
+I found a little typo in Chapter 40 File System Implementation, page 13, and
+it seems there isn't an entry on the website to submit the typo, so I just write
+it down here, the word "inode" is missing:
+
+```
+one to write the `inode` bitmap (to reﬂect its new state to disk)
+```
+
+The next book is The Algorithm Design Manual, it's time to do some programming,
+to be continued.
+

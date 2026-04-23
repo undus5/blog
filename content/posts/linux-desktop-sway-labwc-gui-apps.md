@@ -452,7 +452,7 @@ Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 | Audiobook Player | [cozy](https://cozy.sh/) | - |
 | Text to QR Code | qrencode | - |
 | QR Code to Text | zbar | zbar-tools |
-| Web Browser | [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [brave](https://brave.com/linux/) | - |
+| Web Browser | [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [brave origin](https://versions.brave.com/) | - |
 
 Ungoogled Chromium initialization:
 

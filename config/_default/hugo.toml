@@ -51,16 +51,16 @@ targetBlank = true
 format      = "rss"
 
 [[menus.footer]]
-identifier  = "github"
-name        = "Github"
-url         = "https://github.com/undus5"
-weight      = 5
-[menus.footer.params]
-targetBlank = true
-
-[[menus.footer]]
 identifier  = "archives"
 name        = "Archives"
 pageRef     = "/archives"
+weight      = 5
+
+[[menus.footer]]
+identifier  = "github"
+name        = "Github"
+url         = "https://github.com/undus5"
 weight      = 7
+[menus.footer.params]
+targetBlank = true
 

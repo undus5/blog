@@ -1,6 +1,5 @@
 +++
 title       = 'CSAPP Post Reading'
-subtitle    = ''
 date        = '2025-12-29'
 lastmod     = '2026-01-21'
 tags        = []
@@ -42,7 +41,7 @@ fundamental knowledge. The reading experience this time is a totally different
 story, it feels like a breeze, an enjoyable journey, full of "Aha!" moments and
 smiles.
 
-The most important thing I get from the book is that computer system is being
+The most important thing I got from the book is that computer system is being
 demystified to me. It also cured my frustration and anxiety for facing that
 blackbox. It gives me superman's x-ray vision, let me look inside the
 system, learn how things work under the hood. Turns out there's no magic in
@@ -58,7 +57,9 @@ This book also helped me better understanding the C programming language,
 in fact I've read through the classic "K&R" before, but I felt I just scratched
 on the surface, didn't really get into it. After reading CSAPP, at least I can
 distinguish the referencing operaters between `*` and `&` immediately,
-that means a lot.
+that means a lot. It also helped me training the instinct when
+encountering hexadecimal digits, they were alien words to me before reading the
+book, now they're all make sense.
 
 When I learned what a ".so" library is, and also the overall principle of
 linking, it hit me with a "Aha!". Back in the time when I was tinkering with

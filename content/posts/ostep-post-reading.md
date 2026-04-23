@@ -10,7 +10,7 @@ draft       = false
 hidden      = false
 +++
 
-Now I can imagine what happens behind the scene of every click.
+I can imagine what happens behind the scenes of every click.
 
 <!--more-->
 

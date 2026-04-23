@@ -46,6 +46,16 @@ I have to mention, it's not written by the main authors, and I skipped it
 because of the long-winded and repetitive written, painful to read, which is a
 pity, not recommended.
 
+A little tip here: don't skip the appendix part, or you will miss a lot.
+There's a chapter about virtual machine in the appendix part, this topic is
+one of my top motivations of learning operating system, since I've already
+tinkered with QEMU a lot. The laboratory tutorial about how to compile C project
+is very practical and useful, you don't want to miss it. I wish I could read it
+earlier, since I was always wondering how it works every time I manually
+compiling a package but didn't know how to get started back to the early days.
+The laboratory projects are also interesting, but I decide to read other books
+first.
+
 I found a little typo in Chapter 40 File System Implementation, page 13, and
 it seems there isn't an entry on the website to submit the typo, so I just write
 it down here, the word "inode" is missing:

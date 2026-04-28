@@ -32,9 +32,9 @@ real systems.
 The most important thing I got from the reading is it helped me consolidating
 this common framework in my head to understand computer system, which is,
 there's always a giant byte array, you create some data structure to manage it,
-with some header blocks following with data blocks or so, and there's always a
-cache layer sit between some components for the sake of performance, according
-to spatial or temporal locality.
+with some header blocks following with data blocks or so, and there's always
+some cache layers sit between some components for the sake of performance or
+bandwidth, according to spatial or temporal locality.
 
 It also reveiled how things work under the hood about something I've already
 used before or something I've heard from tech news, such as shell
@@ -43,7 +43,7 @@ TLC/QLC in SSD etc.
 
 There's a 4th piece beyond the "three easy pieces" which is about security
 I have to mention, it's not written by the main authors, and I skipped it
-because of the long-winded and repetitive written, painful to read, which is a
+because it feels long-winded, repetitive and vague, painful to read, which is a
 pity, not recommended.
 
 A little tip here: don't skip the appendix part, or you will miss a lot.

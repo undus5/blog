@@ -56,14 +56,9 @@ works every time I manually compiling some packages but didn't know how to get
 started back to the early days. The laboratory projects are also interesting,
 but I decide to read other books first.
 
-I found a little typo in Chapter 40 File System Implementation, page 13, and
-it seems there isn't an entry on the website to submit the typo, so I just write
-it down here, the word "inode" is missing:
+Errata: Chapter 40 File System Implementation, page 13,
+"one to write the bitmap (to reﬂect its new state to disk)" should be
+"write the inode bitmap".
 
-```
-one to write the `inode` bitmap (to reﬂect its new state to disk)
-```
-
-The next book is The Algorithm Design Manual, it's time to do some programming,
-to be continued.
+The next book is The Algorithm Design Manual, to be continued.
 

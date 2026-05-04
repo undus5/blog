@@ -41,10 +41,9 @@ used before or something I've heard from tech news, such as shell
 redirection, segmentation fault, thread-safe, copy-on-write, defragmentation,
 TLC/QLC in SSD etc.
 
-There's a 4th piece beyond the "three easy pieces" which is about security
-I have to mention, it's not written by the main authors, and I skipped it
-because it feels long-winded, repetitive and vague, painful to read, which is a
-pity, not recommended.
+There's a 4th piece beyond the "three easy pieces" which is about security,
+it's not written by the main authors. I skipped it because it feels a little
+painful to read compared to the other three pieces, maybe retry on another day.
 
 A little tip here: don't skip the appendix part, or you will miss a lot.
 There's a chapter about virtual machine in the appendix part, this topic is

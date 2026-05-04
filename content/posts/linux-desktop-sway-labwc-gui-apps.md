@@ -449,10 +449,10 @@ Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 | Image Viewer | swayimg | - |
 | Video Player | mpv | - |
 | Ebook Reader | [KOReader](https://koreader.rocks/) | - |
-| Audiobook Player | [cozy](https://cozy.sh/) | - |
+| Audiobook Player | - | - |
+| Web Browser | [brave-origin](https://versions.brave.com/), [helium](https://github.com/imputnet/helium-linux/releases/latest), [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [waterfox](https://www.waterfox.com/download/) | - |
 | Text to QR Code | qrencode | - |
 | QR Code to Text | zbar | zbar-tools |
-| Web Browser | [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [brave origin](https://versions.brave.com/) | - |
 
 Ungoogled Chromium initialization:
 
@@ -465,24 +465,6 @@ toolbar and clicking it to update extensions.
 
 Another useful flag is `#disable-top-sites`, which can disable recently viewed
 sites for the new tab page.
-
-Brave disable Crypto and AI related components via
-[Group Policy](https://support.brave.com/hc/en-us/articles/360039248271-Group-Policy):
-
-Create `/etc/brave/policies/managed/brave-policy.json` :
-
-```
-{
-  "BraveAIChatEnabled": true,
-  "BraveRewardsDisabled": true,
-  "BraveWalletDisabled": true,
-  "BraveNewsDisabled": true,
-  "BraveTalkDisabled": true,
-  "BraveVPNDisabled": 1
-}
-```
-
-Visit `brave://policy` from address bar to check the effect.
 
 ## More Apps
 

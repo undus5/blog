@@ -111,10 +111,13 @@ preferred ones for customization:
 
 Sans: [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/)
 This font family has clear distinguishable `0iIoO`.\
-Sans CJK: [IBM Plex SC/TC/JP/KR](https://github.com/IBM/plex)\
+Sans CJK: [IBM Plex](https://github.com/IBM/plex)\
 Mono: [Jetbrains Mono](https://www.jetbrains.com/lp/mono/)
 Great for programming and terminal.\
-Mono CJK: [Maple Mono](https://github.com/subframe7536/maple-font)
+Mono CJK:
+[Sarasa Term](https://github.com/be5invis/Sarasa-Gothic)
+([version description](https://github.com/be5invis/Sarasa-Gothic/issues/12))
+, [Maple Mono](https://github.com/subframe7536/maple-font)
 
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)

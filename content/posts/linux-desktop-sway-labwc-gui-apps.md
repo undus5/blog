@@ -196,9 +196,11 @@ Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_
 
 IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
 KDE replated components, since they are tightly coupled with the KDE framework,
-lots of dependencies would be installed even for a very simple package like
-[breeze-icons](https://github.com/KDE/breeze-icons/), which is annoying.
-LXQt is in a similar situation.
+lots of dependencies would be installed. Even for a very simple package like
+[breeze-icons](https://github.com/KDE/breeze-icons/), if you want to build it
+independently, you still need to build the
+[KDE/extra-cmake-modules](https://github.com/KDE/extra-cmake-modules) package
+first, which is annoying. LXQt is in a similar situation.
 
 The original
 [qt6ct](https://github.com/trialuser02/qt6ct)
@@ -222,17 +224,7 @@ Set GTK app icon theme:
 
 ```
 (user)$ ls /usr/share/icons
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Breeze
-```
-
-If you want to use [breeze-icons](https://github.com/KDE/breeze-icons)
-independently, you can manually download it from the repo:
-
-```
-(user)$ git clone https://github.com/KDE/breeze-icons ~/Downloads
-(user)$ cp -r ~/Downloads/breeze-icons/icons ~/.local/share/icons/Breeze
-(user)$ cd ~/.local/share/icons/Breeze
-(user)$ cat breeze.theme.in commonthemeinfo.theme.in > index.theme
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Qogir
 ```
 
 Recommended icon theme:
@@ -247,7 +239,7 @@ Set cursor theme and size for sway in `~/.config/sway/config`:
 ```
 # seat <name> xcursor_theme <theme> [<size>]
 seat seat0 xcursor_theme default 24
-seat seat0 xcursor_theme Bibata-Modern-Ice 28
+seat seat0 xcursor_theme Qogir 32
 ```
 
 Ref: [sway-input(5)](https://man.archlinux.org/man/sway-input.5.en)
@@ -255,13 +247,14 @@ Ref: [sway-input(5)](https://man.archlinux.org/man/sway-input.5.en)
 Set cursor theme and size for labwc in `~/.config/labwc/environment`:
 
 ```
-XCURSOR_THEME=Bibata-Modern-Ice
-XCURSOR_SIZE=28
+XCURSOR_THEME=Qogir
+XCURSOR_SIZE=32
 ```
 
 Ref: [labwc-config(5)](https://labwc.github.io/labwc-config.5.html)
 
-Recommended cursor theme: [Bibata_Cursor](https://github.com/ful1e5/Bibata_Cursor)
+Recommended cursor theme:
+[Qogir-icon-theme](https://github.com/vinceliuice/Qogir-icon-theme)
 
 ## File Manager
 

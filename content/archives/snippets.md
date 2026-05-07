@@ -11,13 +11,6 @@ SVG to PNG
 (user)$ rsvg-convert -w 800 input.svg > output.png
 ```
 
-Write protecting file
-
-```
-(root)# chattr +i data.txt
-(root)# chattr -i data.txt
-```
-
 Android WiFi "Limited Connection"
 
 ```
@@ -29,27 +22,7 @@ Android WiFi "Limited Connection"
 Extend Library PATH
 
 ```
-# add dir to library PATH
-(user)$ export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH
-
-# list files in RPM
-(user)$ rpm -qlp example.rpm
-
-# extract files from RPM
-(user)$ rpm2cpio example.rpm | cpio -idmv
-```
-
-Image Converting (need ImageMagick package installed)
-
-```
-# convert and resize image
-(user)$ convert -scale 800x input.jpg output.webp
-
-# convert image to grayscale
-(user)$ convert -colorspace gray input.jpg output.jpg
-
-# convert transparent image to white background
-(user)$ convert -background white -flatten input.png output.jpg
+(user)$ LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH <command ...>
 ```
 
 File Encoding
@@ -83,16 +56,5 @@ Recursively Change Files and Directories
 
 # rename files (prename)
 (user)$ find . -type f -name "foo*" -exec rename 's/foo/bar' '{}' \;
-```
-
-Git 
-
-```
-# remove untracked files
-(user)$ git clean -f -d
-
-# force to use LF (Windows)
-(user)$ git config --global core.autocrlf input
-(user)$ git config --global core.eol lf
 ```
 

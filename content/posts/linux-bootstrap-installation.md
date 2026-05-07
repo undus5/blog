@@ -225,10 +225,12 @@ UUID=XXXX-XXXX /efi vfat defaults 0 0
 (root)# chroot /mnt /bin/bash
 ```
 
-## Timezone
+## Time
 
 ```
 (root)# ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+(root)# systemctl enable systemd-networkd.service
+(root)# hwclock --systohc
 ```
 
 ## Localization

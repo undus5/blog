@@ -10,7 +10,7 @@ draft       = false
 hidden      = false
 +++
 
-Operating system now is a white box to me.
+Operating system is no longer black box to me.
 
 <!--more-->
 

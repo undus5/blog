@@ -1,7 +1,7 @@
 +++
 title       = 'Linux Post Installation'
 subtitle    = ''
-lastmod     = '2025-11-30'
+lastmod     = '2026-05-10'
 date        = '2025-11-26'
 tags        = []
 showSummary = true

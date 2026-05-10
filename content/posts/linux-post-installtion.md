@@ -82,21 +82,32 @@ and there’s documentation for adding printer
 
 ## GPU Drivers
 
-![Linus Torvalds Fuck You Nvidia](/images/linus-torvalds-fuck-you-nvidia.webp)
-
-I only use
-[AMD GPU](https://wiki.archlinux.org/title/AMDGPU)
-and
-[Intel GPU](https://wiki.archlinux.org/title/Intel_graphics)
-on Linux for the well known reasons.
+To choose [GPU](https://wiki.archlinux.org/title/Graphics_processing_unit) for
+Linux, AMD is still the prefered option for stability and performance,
+but for daily use, it doesn't matter. I've learned that Nvidia driver is getting
+solid enough these days, and Intel is catching up too.
 
 Install `mesa` and `vulkan` related packages:
 
 Arch AMD: `mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon`\
-Arch Intel: `mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver`
+Arch Intel: `mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver`\
+Arch Nvidia: `nvidia-open` for GPU newer than GTX 1650
 
-For Fedora, it seems these drivers and firmwares are bundled with core package
-group.
+For Fedora, need to enable [RPM Fusion](https://rpmfusion.org/)
+then install freeworld packages:
+
+```
+(root)# dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-{free,nonfree}-release-$(rpm -E %fedora).noarch.rpm 
+# for AMD
+(root)# dnf install mesa-va-drivers-freeworld
+# for Intel
+(root)# dnf install intel-media-driver
+# for Nvidia newer than GTX 1650
+(root)# dnf install akmod-nvidia
+```
+
+Ref: [Multimedia on Fedora](https://rpmfusion.org/Howto/Multimedia)
+, [NVIDIA on Fedora](https://rpmfusion.org/Howto/NVIDIA)
 
 Use [mpv](https://wiki.archlinux.org/title/Mpv#Hardware_video_acceleration)
 to test

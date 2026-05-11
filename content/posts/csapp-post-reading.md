@@ -69,15 +69,11 @@ just specify the environment variable LD_LIBRARY_PATH ahead of the running
 command. I knew the library is some essential dependency, but I didn't know
 what it really is. Another one is about the dynamic linker "ld-linux.so", which
 I already used a couple of times for converting my VPS into Arch Linux. After
-deleting the old system, I need to run the following command to initiate
-the new system with the help of ld-linux.so:
-
-```
-(root)# /root.x86_64/usr/lib/ld-linux-x86-64.so.2 \
-    --library-path /root.x86_64/usr/lib \
-    /root.x86_64/usr/bin/chroot /root.x86_64 pacstrap /mnt \
-    base linux mkinitcpio grub openssh
-```
+deleting the old system, I need to invoke `ld-linux.so` specifically to initiate
+the new system with something like:
+`/root.x86_64/usr/lib/ld-linux-x86-64.so.2 --library-path /root.x86_64/usr/lib
+/root.x86_64/usr/bin/chroot /root.x86_64 pacstrap /mnt base linux mkinitcpio
+grub openssh`
 
 When I learned about virutal memory page, it reminded me some
 good old times, more than a decade ago I think,

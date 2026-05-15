@@ -45,11 +45,9 @@ The Appendix part of the book is great.
 There's a chapter about virtual machine in the appendix part, this topic is
 one of my top motivations of learning operating system, since I've already
 tinkered with QEMU a lot. The laboratory tutorial about how to compile C project
-is very practical and useful, you should read it even if you don't want to write
-C program, I wish I could read it earlier, since I was always wondering how it
-works every time I manually compiling some packages but didn't know how to get
-started back to the early days. The laboratory projects are also interesting,
-but I skipped them for now, need to read other books first.
+is practical, I've already encountered `make` command when compiling packages
+manually but never digged into it, this tutorial let me learn what happenned
+behind the scenes.
 
 Errata: Chapter 40 File System Implementation, page 13,
 "one to write the bitmap (to reﬂect its new state to disk)" should be

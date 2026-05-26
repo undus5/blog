@@ -2,7 +2,7 @@
 title       = 'OSTEP Post Reading'
 date        = '2026-04-23'
 lastmod     = '2026-04-23'
-tags        = []
+tags        = ['computer-science']
 showSummary = true
 showTOC     = true
 weight      = 1000
@@ -53,5 +53,9 @@ Errata: Chapter 40 File System Implementation, page 13,
 "one to write the bitmap (to reﬂect its new state to disk)" should be
 "write the inode bitmap".
 
-The next book is The Algorithm Design Manual, to be continued.
+~The next book is The Algorithm Design Manual, to be continued.~
+
+Update: The Algorithm Design Manual is not beginner friendly in my opinion,
+I would recommend "A Common-Sense Guide to Data Structures and Algorithms"
+by Jay Wengrow and "Grokking Algorithms" by Aditya Y. Bhargava.
 

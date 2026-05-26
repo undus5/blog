@@ -3,6 +3,7 @@ aliases     = "/posts/qemu-install-windows11-guest/"
 title       = "QEMU/KVM: Windows 11 Guest"
 lastmod     = 2025-12-27
 date        = 2024-12-09
+tags        = ['linux']
 showSummary = true
 showTOC     = true
 weight      = 1000

@@ -2,7 +2,7 @@
 title       = 'Linux A/B System Updates via BTRFS Snapshot'
 lastmod     = '2026-01-30'
 date        = '2025-11-05'
-tags        = []
+tags        = ['linux']
 showSummary = true
 showTOC     = true
 weight      = 1000

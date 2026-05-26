@@ -2,7 +2,7 @@
 title       = 'CSAPP Post Reading'
 date        = '2025-12-29'
 lastmod     = '2026-01-21'
-tags        = []
+tags        = ['computer-science']
 showSummary = true
 showTOC     = true
 weight      = 1000

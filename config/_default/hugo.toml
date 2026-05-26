@@ -42,6 +42,12 @@ weight      = 1
 type = "plain"
 
 [[menus.footer]]
+identifier  = "tags"
+name        = "Tags"
+pageRef     = "/tags"
+weight      = 2
+
+[[menus.footer]]
 identifier  = "rss"
 name        = "Feed"
 pageRef     = "/"

@@ -1,9 +1,10 @@
 +++
 aliases     = "/posts/reading-sicp/"
 title       = "SICP Post Reading"
-showSummary = true
 lastmod     = 2024-11-02T20:46:00+08:00
 date        = 2024-07-22
+tags        = ['computer-science']
+showSummary = true
 weight      = 1000
 +++
 

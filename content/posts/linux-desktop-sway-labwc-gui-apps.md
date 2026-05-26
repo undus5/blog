@@ -2,7 +2,7 @@
 title       = 'Linux Desktop: Sway, Labwc, GUI Apps'
 lastmod     = '2026-03-14'
 date        = '2025-11-30'
-tags        = []
+tags        = ['linux']
 showSummary = true
 showTOC     = true
 weight      = 1000

@@ -53,9 +53,5 @@ Errata: Chapter 40 File System Implementation, page 13,
 "one to write the bitmap (to reﬂect its new state to disk)" should be
 "write the inode bitmap".
 
-~The next book is The Algorithm Design Manual, to be continued.~
-
-Update: The Algorithm Design Manual is not beginner friendly in my opinion,
-I would recommend "A Common-Sense Guide to Data Structures and Algorithms"
-by Jay Wengrow and "Grokking Algorithms" by Aditya Y. Bhargava.
+The next book is The Algorithm Design Manual, to be continued.
 

@@ -54,11 +54,11 @@ how to decode the data.
 
 This book also helped me better understanding the C programming language,
 in fact I've read through the classic "K&R" before, but I felt I just scratched
-on the surface, didn't really get into it. After reading CSAPP, things changed,
-now I can distinguish the referencing operaters between `*` and `&` immediately,
-that means a lot. It also helped me training the instinct when encountering
-hexadecimal digits, they were alien words to me before reading the book, now
-they all make sense.
+on the surface, since I didn't use the language to write programs. After
+reading CSAPP, I got better understanding of it, I can distinguish the
+referencing operaters between `*` and `&` immediately, that means a lot. It
+also helped me training the instinct when encountering hexadecimal digits, they
+were alien words to me before reading the book, now they all make sense.
 
 When I learned what a ".so" library is, and also the overall principle of
 linking, it hit me with a "Aha!". Back in the time when I was tinkering with

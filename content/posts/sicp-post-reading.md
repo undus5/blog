@@ -23,38 +23,34 @@ modern terms.
 So what did I learn? Can't say there's a lot to be honest, because I didn't
 remember much about the examples from the book, but truly got something.
 I'm being more familiar with recursion, and programming language is no longer
-a mystery black box to me after finishing the first three chapters. In the last
-two chapters, it give me a chance to glance at inside of interpreter and
-compiler, even hardware. I did not fully understand, however, it opened my eyes,
-way more than I thought.
+mystery black box to me after finishing the first three chapters, these various
+operations are just syntactic sugars in some way. In the last two chapters,
+it give me a chance to glance at inside of interpreter and compiler, even
+hardware, I did not fully understand, however, it opened my eyes.
 
-Most important, it tells me that computer systems are all about abstractions,
-layer by layer. If you can't understand something, just ignore it for a moment,
-treat it as a magic black box, and focus on the higher level abstractions above
-it, then go back when you feel more confident. Don't intimidate your self with
-some kind of fancy imagination because of that "fear of the unknown" kind of
-feeling. I think this should be the first thing learned by a novice,
-so to speak, every programmer should read this book. However, it's not much
-friendly to beginners, especially for self learners like myself. Then when is
-the right time to read it? Let me tell you my experience.
+Most important, it told me that computer systems are all about abstractions,
+layer by layer. Don't intimidate yourself with some kind of fancy imagination
+because of that "fear of the unknown" kind of feeling, if something make you
+feel like magic and complicated, just remind yourself it must be derived from
+some very basic machanisms. I wish I could learn this fact more earlier.
 
 I've heared about SICP for years,
 tried several times but got intimidated during the time until these days.
 Why did it work this time? Because I felt hitting a plateau, and want to change.
 More specific, as a programmer, I can handle my daily job,
-but can't understand the low level details. Tried to find a way to improve,
-search for books, once read about this advice
+but can't understand the low level details, tried to find a way to improve,
+searched for books, but with no luck. Once I read about this advice
 "Learn at least one new language every year" from the book
-"The Pragmatic Programmer", not helpful. I'm sure it won't work on me, even I do
-as it says, I could only scratch on the surface of those languages, learning
-similar syntax with little variation over and over again.
+"The Pragmatic Programmer", not helpful, for me, I could only scratch on the
+surface from a new language, repeat with similar operations and functions with
+little variations again and again without deeper understanding.
 
-I realized my problem is lacking of some kind of fundamental systematic
+Then I realized my problem is lacking of some kind of fundamental systematic
 knowledge, so I searched for resources about self learning computer science,
 led me to this website [teachyourselfcs.com](https://teachyourselfcs.com/),
 the subjects they suggest are convincible, and SICP is the first book they
-suggest to read. Then, finally, I decided to follow this guide, seriously,
-with patience, and I was doing well.
+suggest to read. Then finally, I decided to follow this guide, seriously,
+with patience, and things went well.
 
 The next book is CSAPP, to be contined.
 

@@ -21,10 +21,15 @@ not what I want, it's too much for me.
 I finished the first eight chapters with some struggling, which cover topics
 about basic data structures and algorithms of sorting, hashing and graphs, but
 didn't follow much about divide and conquer principle, not to metion master
-theorem, probability theory, sigh ... Then I almost skipped the rest of the
+theorem, probability theory, sigh, it's actually not about these theories, it's
+about my english level, again ... I can easily understand common technique stuff
+written in english, but when get involved into the part which using words to
+depict complicated or too abstract problems such as mathematical proof, things
+become difficult. Then I almost skipped the rest of the
 book, except for the first section of chapter 10, which covers dynamic
-programming with fibonacci numbers as examples. Chapter 9, combinatorial search,
-backtracing, so tricky. Chapter 11, NP-completeness, what's that? Hehe ...
+programming with fibonacci numbers as examples. The rest parts, like chapter 9
+combinatorial search, is so tricky, chapter 11, NP-completeness, what's that?
+Hehe ...
 
 I did some research after this disaster, found two books maybe more proper to
 me, "A Common-Sense Guide to Data Structures and Algorithms" by Jay Wengrow and

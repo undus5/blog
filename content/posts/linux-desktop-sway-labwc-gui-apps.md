@@ -385,10 +385,8 @@ MimeType=application/octet-stream;
 hardcoding user home directory, by using
 [bash(1)](https://man.archlinux.org/man/bash.1) to expand `~`.
 
-Ref: [Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry/latest/exec-variables.html)
-
-There're more desktop entry examples in
-`~/apps/peazip/res/share/batch/freedesktop_integration/additional-desktop-files`.
+There're more desktop entry examples under
+`peazip/res/share/batch/freedesktop_integration/additional-desktop-files`.
 
 Apply change:
 
@@ -449,6 +447,12 @@ Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 | Web Browser | [brave-origin](https://versions.brave.com/), [helium](https://github.com/imputnet/helium-linux/releases/latest), [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [waterfox](https://www.waterfox.com/download/) | - |
 | Text to QR Code | qrencode | - |
 | QR Code to Text | zbar | zbar-tools |
+
+Set default browser:
+
+```
+(user)$ xdg-settings set default-web-browser brave-origin.desktop
+```
 
 Ungoogled Chromium initialization:
 

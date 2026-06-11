@@ -744,21 +744,18 @@ to a IOMMU friendly one, such as X570 series for AM4 socket or refer to
 https://iommu.info, https://www.reddit.com/r/VFIO/.
 
 To isolate and bind GPU device, remeber GPU device and corresponding
-audio device's IDs, they are look like `[10de:1d02]`, add them to
-`vfio-pci` kernel module config file by creating `/etc/modprobe.d/vfio-pci.conf`:
+audio device's addresses, they are look like `0000:0d:00.0`, then using
+[driverctl](https://gitlab.com/driverctl/driverctl) to bind and unbind:
 
 ```
-options vfio-pci ids=10de:1d02,10de:0fb8
+(root)# driverctl set-override 0000:0d:00.0 vfio-pci
+(root)# driverctl set-override 0000:0d:00.1 vfio-pci
+
+(root)# driverctl unset-override 0000:0d:00.0
+(root)# driverctl unset-override 0000:0d:00.1
 ```
 
-Load `vfio-pci` module early via dracut by creating
-`/etc/dracut.conf.d/10-vfio.conf`:
-
-```
-force_drivers+=" vfio_pci vfio vfio_iommu_type1 "
-```
-
-Reboot and verify vfio-pci has loaded properly and bound to the right devices:
+Verify vfio-pci has loaded properly and bound to the right devices:
 
 ```
 (root)# dmesg | grep -i vfio

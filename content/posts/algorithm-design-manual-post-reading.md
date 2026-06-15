@@ -34,11 +34,7 @@ Hehe ...
 I did some research after this disaster, found two books maybe more proper to
 me, "A Common-Sense Guide to Data Structures and Algorithms" by Jay Wengrow and
 "Grokking Algorithms" by Aditya Y. Bhargava, but that might be stories on
-another days. I decide to pause my journey of computer science for a moment,
-I believe I've gathered enough basic knowledge to guide myself to do whatever
-I want. There're several real system problems I've always wanted to solve,
-they exist on my todo list for a long time, now I can give them a try,
-actually I almost can't wait.
-
-That's it, to be continued.
+another days. I believe I've gathered enough basic knowledge to guide myself to
+do whatever I want, and I'm gonna take a break, tinkering with some side
+projects. That's it, to be continued.
 

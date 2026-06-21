@@ -162,11 +162,10 @@ to install base system packages into /mnt.
 Common packages:
 
 ```
-(root)# common_pkgs="filesystem glibc bash coreutils shadow-utils dracut \
+(root)# common_pkgs="filesystem glibc bash bash-completion coreutils dracut \
     cryptsetup systemd systemd-networkd systemd-resolved zram-generator \
-    util-linux procps-ng iputils kbd ncurses less man-db \
-    e2fsprogs btrfs-progs parted fwupd \
-    openssh-clients openssh-server curl plymouth"
+    shadow-utils util-linux procps-ng iputils e2fsprogs btrfs-progs parted \
+    kbd ncurses less man-db curl plymouth openssh-clients openssh-server fwupd"
 (root)# common_pkgs+="iproute vim zram-generator"
 ```
 
@@ -185,9 +184,9 @@ For Fedora it's DNF:
 
 ```
 (root)# dnf --use-host-config --releasever=44 --installroot=/mnt install \
-    ${common_pkgs} kernel linux-firmware glibc-langpack-en \
+    ${common_pkgs} kernel linux-firmware glibc-langpack-en rootfiles \
     amd-ucode-firmware iwlwifi-mvm-firmware dnf5 dnf5-plugins \
-    rpm rpmfusion-free-release rpmfusion-nonfree-release
+    rpmfusion-free-release rpmfusion-nonfree-release
 ```
 
 For Debian it's [Debootstrap](https://wiki.debian.org/Debootstrap):
@@ -227,8 +226,8 @@ UUID=XXXX-XXXX /efi vfat defaults 0 0
 Mount virtual filesystems to `/mnt` for later chroot:
 
 ```
-(root)# for dir in dev proc run sys; do \
-    mount --mkdir --rbind --make-rslave /$dir /mnt/$dir; done
+(root)# for DIR in dev proc run sys; do \
+    mount --mkdir --rbind --make-rslave /$DIR /mnt/$DIR; done
 ```
 
 ## Chroot
@@ -241,7 +240,7 @@ Mount virtual filesystems to `/mnt` for later chroot:
 
 ```
 (root)# ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-(root)# systemctl enable systemd-networkd.service
+(root)# systemctl enable systemd-timesyncd.service
 (root)# hwclock --systohc
 ```
 
@@ -515,9 +514,8 @@ kimg="$4"
 
 ## Limine
 
-Now we setup bootlader. Choosing
-[Limine](https://github.com/Limine-Bootloader/Limine) instead of systemd-boot
-is because systemd-boot always flickering under QEMU, barely works.
+Now we setup bootlader using
+[Limine](https://github.com/Limine-Bootloader/Limine).
 
 Download `limine-binary` tarball from the
 [latest release](https://github.com/Limine-Bootloader/Limine/releases/latest),
@@ -568,6 +566,8 @@ since we've already created manually:
 ```
 (root)# ln -s /dev/null /etc/kernel/install.d/90-loaderentry.install
 ```
+
+Ref: [Limine - Arch Wiki](https://wiki.archlinux.org/title/Limine)
 
 ## Reboot
 

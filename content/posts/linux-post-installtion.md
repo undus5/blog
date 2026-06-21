@@ -27,7 +27,7 @@ This guide is distro independent, tested on Arch and Fedora.
 ## Default Editor
 
 ```
-(root)# echo "export EDITOR=/usr/bin/nvim" > /etc/profile.d/default-editor.sh
+(root)# echo "export EDITOR=/usr/bin/nvim" > /etc/profile.d/nvim-default-editor.sh
 ```
 
 You could replace `nvim` with whatever you like.
@@ -116,9 +116,6 @@ to test
 
 ## Disable Watchdogs
 
-This setting is for
-[improving performance](https://wiki.archlinux.org/title/Improving_performance#Watchdogs).
-
 Check for a hardware watchdog module:
 
 ```
@@ -136,16 +133,5 @@ blacklist intel_oc_wdt
 EOB
 ```
 
-## Console Caps Ctrl
-
-Remap `CapsLock` to `Ctrl` for console.
-
-```
-(root)# cd /usr/share/kbd/keymaps/i386/qwerty
-(root)# gzip -dc < us.map.gz > usa.map
-(root)# sed -i '/^keycode[[:space:]]58/c\keycode 58 = Control' usa.map
-(root)# echo "KEYMAP=usa" >> /etc/vconsole.conf
-```
-
-Ref: [Linux_console/Keyboard_configuration#Creating_a_custom_keymap](https://wiki.archlinux.org/title/Linux_console/Keyboard_configuration#Creating_a_custom_keymap)
-
+This setting is for
+[improving performance](https://wiki.archlinux.org/title/Improving_performance#Watchdogs).

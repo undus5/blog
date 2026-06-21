@@ -1,7 +1,7 @@
 +++
 title       = 'Linux Bootstrap Installation'
 aliases     = ["/posts/bootstrap-install-any-linux-distro/"]
-lastmod     = '2026-02-19'
+lastmod     = '2026-06-21'
 date        = '2025-10-19'
 tags        = ['linux']
 showTOC     = true
@@ -154,44 +154,47 @@ local: `/etc/yum.repos.d/fedora.repo`\
 Debian: [mirrorlist](https://www.debian.org/mirror/list),
 local: `/etc/apt/sources.list`
 
-## Mount VFS
-
-Mount virtual filesystems to `/mnt` then chroot into it :
-
-```
-(root)# for dir in dev proc run sys; do \
-    mount --mkdir --rbind --make-rslave /$dir /mnt/$dir; done
-```
-
 ## Base System
 
 Now we are ready to install the base system. We will use a dedicated tool
 to install base system packages into /mnt.
 
+Common packages:
+
+```
+(root)# common_pkgs="filesystem glibc bash coreutils shadow-utils dracut \
+    cryptsetup systemd systemd-networkd systemd-resolved zram-generator \
+    util-linux procps-ng iputils kbd ncurses less man-db \
+    e2fsprogs btrfs-progs parted fwupd \
+    openssh-clients openssh-server curl plymouth"
+(root)# common_pkgs+="iproute vim zram-generator"
+```
+
+Note: `iproute` is `iproute2` in Arch, `vim` is `vim-minimal` in Fedora,
+`zram-generator` is `systemd-zram-generator` in Debian.
+
 For Arch it's
 [Pacstrap](https://wiki.archlinux.org/title/Installation_guide#Install_essential_packages):
 
 ```
-(root)# pacstrap -K /mnt \
-    base linux linux-firmware btrfs-progs dracut zram-generator vim \
-    amd-ucode intel-ucode
+(root)# pacstrap -K /mnt ${common_pkgs} \
+    linux linux-firmware amd-ucode intel-ucode pacman
 ```
 
 For Fedora it's DNF:
 
 ```
-(root)# dnf --use-host-config --releasever=43 --installroot=/mnt group install core
-(root)# dnf --use-host-config --releasever=43 --installroot=/mnt install \
-    kernel linux-firmware dracut zram-generator systemd-boot cryptsetup \
-    glibc-langpack-en btrfs-progs vim amd-ucode-firmware iwlwifi-mvm-firmware
+(root)# dnf --use-host-config --releasever=44 --installroot=/mnt install \
+    ${common_pkgs} kernel linux-firmware glibc-langpack-en \
+    amd-ucode-firmware iwlwifi-mvm-firmware dnf5 dnf5-plugins \
+    rpm rpmfusion-free-release rpmfusion-nonfree-release
 ```
 
 For Debian it's [Debootstrap](https://wiki.debian.org/Debootstrap):
 
 ```
-(root)# debootstrap --include=\
-    linux-image-amd64,non-free-firmware,dracut,systemd-zram-generator,\
-    systemd-boot,cryptsetup,btrfs-progs,vim,amd64-microcode,intel-microcode \
+(root)# debootstrap --include=${common_pkgs},\
+    linux-image-amd64,non-free-firmware,amd64-microcode,intel-microcode \
     stable /mnt http://deb.debian.org/debian/
 ```
 
@@ -217,6 +220,15 @@ Then we edit `/mnt/etc/fstab`. If you use `nano` text editor, you can press
 UUID=xxxxxxxx-...-xxxxxxxxxxxx /     btrfs compress=zstd,subvol=/@     0 0
 UUID=xxxxxxxx-...-xxxxxxxxxxxx /home btrfs compress=zstd,subvol=/@home 0 0
 UUID=XXXX-XXXX /efi vfat defaults 0 0
+```
+
+## Mount VFS
+
+Mount virtual filesystems to `/mnt` for later chroot:
+
+```
+(root)# for dir in dev proc run sys; do \
+    mount --mkdir --rbind --make-rslave /$dir /mnt/$dir; done
 ```
 
 ## Chroot
@@ -286,11 +298,12 @@ interfaces for virtual machines.
 Run `ip link show` command to get your network interface names,
 for example: enp0s1, wlan0.
 
-For wired network interface, create `/etc/systemd/network/23-lan.network`.
+For wired network interface, create `/etc/systemd/network/20-lan.network`.
 
 ```
 [Match]
-Name=en*
+Type=ether
+Kind=!*
 [Link]
 RequiredForOnline=routable
 [Network]
@@ -301,11 +314,14 @@ RouteMetric=100
 RouteMetric=100
 ```
 
-For wireless network interface, create `/etc/systemd/network/25-wlan.network`.
+Note that `Type=ether` will also match virtual Ethernet interfaces. To exclude
+them, use `Type=ether` in combination with `Kind=!*`.
+
+For wireless network interface, create `/etc/systemd/network/35-wlan.network`.
 
 ```
 [Match]
-Name=wl*
+Type=wlan
 [Link]
 RequiredForOnline=routable
 [Network]
@@ -360,72 +376,6 @@ Debian need to move out `/etc/network/interfaces` according to
 (root)# mv /etc/network/interfaces /etc/network/interfaces.old
 ```
 
-## Systemd-Boot
-
-[Install UEFI boot manager](https://wiki.archlinux.org/title/Systemd-boot#Installing_the_UEFI_boot_manager).
-
-```
-(root)# bootctl install
-(root)# systemctl enable systemd-boot-update.service
-```
-
-Create bootloader entry `/efi/loader/entries/linux.conf`.
-
-```
-title Arch Linux
-linux /linux/vmlinuz
-initrd /linux/initrd
-options rootflags=subvol=@ quiet splash
-```
-
-`/linux/vmlinuz` is actually pointed to `/efi/linux/vmlinuz`, since the path
-is relative to the root of your
-[EFI system partition](https://wiki.archlinux.org/title/EFI_system_partition)
-, which is `/efi` in this guide. We will put kernel image and initramfs image
-into `/efi/linux/` via dracut configuation in the next section.
-
-To use
-[BTRFS subvolume as root](https://wiki.archlinux.org/title/Btrfs#Mounting_subvolume_as_root)
-mountpoint, use kernel parameter `rootflags=subvol=@`,
-or you would get an error "Failed to start Switch Root" when booting up.
-
-Set default boot entry in `/efi/loader/loader.conf`.
-
-```
-default linux.conf
-timeout 0
-editor no
-```
-
-`timeout 0` means the boot menu will not be displayed by default,
-and the system will immediately boot into the default entry.
-To reveal the boot menu in this scenario, a key needs to be pressed and
-held down during the boot process, before systemd-boot initializes.
-The recommended key for this action is the space bar.
-Other keys may also work, but space bar is widely suggested.
-
-Note: If disk partitions were not following the
-[Discoverable Partitions Specification](https://uapi-group.org/specifications/specs/discoverable_partitions_specification/)
-, which means root partition would not be discovered and auto mounted,
-booting system would stuck at
-`a start job is running for /dev/gpt-auto-root` and timeout.
-To fix this,
-[name root partition in kernel parameters](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_the_boot_loader)
-using [rd.luks.name](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#rd.luks.name).
-
-```
-options rd.luks.name=<UUID>=root root=/dev/mapper/root rootflags=subvol=@
-```
-
-For Fedora and Debian there's one more step, by default they will trigger a
-systemd [kernel-install(8)](https://man.archlinux.org/man/kernel-install.8)
-plugin to generate systemd-boot loader entry automatically, we just disable it
-since we've already created manually:
-
-```
-(root)# ln -s /dev/null /etc/kernel/install.d/90-loaderentry.install
-```
-
 ## Dracut
 
 Remeber we discussed about setting LUKS with a preset key file? This is the right time.
@@ -446,7 +396,6 @@ cryptsetup luksAddKey /dev/disk/by-partlabel/ROOTPART /etc/cryptsetup-keys.d/roo
 Create `/etc/dracut.conf.d/dracut.conf`.
 
 ```
-hostonly="yes"
 enhanced_cpio="yes"
 compress="cat"
 do_strip="no"
@@ -466,20 +415,20 @@ dracut install script, put it into say `/usr/local/bin/dracut-install.sh`:
 ```
 #!/bin/bash
 
-kver="${1}"
-dest="${2}"
+kver="$1"
+dest="$2"
 kimg="/usr/lib/modules/${kver}/vmlinuz"
-[[ -f "${kimg}" ]] || exit 1
+[[ -f "$kimg" ]] || exit 1
 
 dracut-install() {
-    local stubdir="${1}"
+    local stubdir="$1"
     local vmlinuz=${stubdir}/vmlinuz
     local initrd=${stubdir}/initrd
-    install -Dm0644 "${kimg}" "${vmlinuz}"
-    dracut --force --hostonly --no-hostonly-cmdline --kver "${kver}" "${initrd}"
+    install -Dm0644 "$kimg" "$vmlinuz"
+    dracut --force --hostonly --no-hostonly-cmdline --kver "$kver" "$initrd"
 }
 
-[[ -d "${dest}" ]] && dracut-install "${dest}" && exit 0
+[[ -d "$dest" ]] && dracut-install "$dest" && exit 0
 dracut-install /efi/linux
 ```
 
@@ -551,17 +500,73 @@ For Fedora and Debian kernel-install plugin, create
 ```
 #!/bin/bash
 
-[[ ${#} == 4 ]] || exit 0
+[[ $# == 4 ]] || exit 0
 
-cmd="${1}"
-kver="${2}"
-dest="${3}"
-kimg="${4}"
+cmd="$1"
+kver="$2"
+dest="$3"
+kimg="$4"
 
-[[ "${cmd}" == "add" ]] || exit 0
-[[ -f "${kimg}" ]] || exit 1
+[[ "$cmd" == "add" ]] || exit 0
+[[ -f "$kimg" ]] || exit 1
 
-/usr/local/bin/dracut-install.sh "${kver}"
+/usr/local/bin/dracut-install.sh "$kver"
+```
+
+## Limine
+
+Now we setup bootlader. Choosing
+[Limine](https://github.com/Limine-Bootloader/Limine) instead of systemd-boot
+is because systemd-boot always flickering under QEMU, barely works.
+
+Download `limine-binary` tarball from the
+[latest release](https://github.com/Limine-Bootloader/Limine/releases/latest),
+extract `BOOTX64.EFI` to `/efi/EFI/BOOT/BOOTX64.EFI`.
+
+Create bootloader entrie `/efi/limine/limine.conf`:
+
+```
+timeout 0.25
+quiet: yes
+
+/Linux
+   protocol: linux
+   kernel_path: boot():/linux/vmlinuz
+   module_path: boot():/linux/initrd
+   cmdline: rootflags=subvol=@ quiet splash
+```
+
+`/linux/vmlinuz` is actually pointed to `/efi/linux/vmlinuz`, since the path
+is relative to the root of your
+[EFI system partition](https://wiki.archlinux.org/title/EFI_system_partition)
+, which is `/efi` in this guide. We will put kernel image and initramfs image
+into `/efi/linux/` via dracut configuation in the next section.
+
+To use
+[BTRFS subvolume as root](https://wiki.archlinux.org/title/Btrfs#Mounting_subvolume_as_root)
+mountpoint, use kernel parameter `rootflags=subvol=@`,
+or you would get an error "Failed to start Switch Root" when booting up.
+
+Note: If disk partitions were not following the
+[Discoverable Partitions Specification](https://uapi-group.org/specifications/specs/discoverable_partitions_specification/)
+, which means root partition would not be discovered and auto mounted,
+booting system would stuck at
+`a start job is running for /dev/gpt-auto-root` and timeout.
+To fix this,
+[name root partition in kernel parameters](https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#Configuring_the_boot_loader)
+using [rd.luks.name](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#rd.luks.name).
+
+```
+cmdline: rd.luks.name=<UUID>=root root=/dev/mapper/root rootflags=subvol=@
+```
+
+For Fedora and Debian there's one more step, by default they will trigger a
+systemd [kernel-install(8)](https://man.archlinux.org/man/kernel-install.8)
+plugin to generate systemd-boot loader entry automatically, we just disable it
+since we've already created manually:
+
+```
+(root)# ln -s /dev/null /etc/kernel/install.d/90-loaderentry.install
 ```
 
 ## Reboot

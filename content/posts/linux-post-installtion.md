@@ -32,32 +32,47 @@ This guide is distro independent, tested on Arch and Fedora.
 
 You could replace `nvim` with whatever you like.
 
-## Console Fonts
-
-Install package:
-
-Arch: terminus-fonts\
-Fedora: terminus-fonts-console
-
-```
-(root)# echo "FONT=ter-120b" >> /etc/vconsole.conf
-```
-
-Full font list:
-
-Arch: `ls /usr/share/kbd/consolefonts/`\
-Fedora: `ls /usr/lib/kbd/consolefonts/`
-
-Change font temporally: `setfont <font_name>`
-
-Ref: [Linux_console#Fonts](https://wiki.archlinux.org/title/Linux_console#Fonts)
-
 ## PipeWire
 
 Install [PipeWire](https://wiki.archlinux.org/title/PipeWire) related packages:
 
 Arch: `pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber`\
 Fedora: `pipewire pipewire-utils`
+
+## GPU Drivers
+
+To choose [GPU](https://wiki.archlinux.org/title/Graphics_processing_unit) for
+Linux, AMD is still the prefered option for stability and performance,
+but for daily use, it doesn't matter. I've learned that Nvidia driver is getting
+solid enough these days, and Intel is catching up too.
+
+Install `mesa` and `vulkan` related packages:
+
+Arch AMD, Intel: `mesa vulkan-radeon vulkan-intel intel-media-driver`\
+Arch Nvidia: `nvidia-open` for GPU newer than GTX 1650
+
+For Fedora, need to enable [RPM Fusion](https://rpmfusion.org/)
+then install freeworld packages:
+
+```
+(root)# dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-{free,nonfree}-release-$(rpm -E %fedora).noarch.rpm 
+# FFmpeg
+(root)# dnf swap ffmpeg-free ffmpeg --allowerasing
+# AMD GPU
+(root)# dnf install mesa-va-drivers-freeworld
+# Intel GPU
+(root)# dnf install intel-media-driver
+# Nvidia GPU newer than GTX 1650
+(root)# dnf install akmod-nvidia
+```
+
+Ref: [Multimedia on Fedora](https://rpmfusion.org/Howto/Multimedia)
+, [NVIDIA on Fedora](https://rpmfusion.org/Howto/NVIDIA)
+
+Use [mpv](https://wiki.archlinux.org/title/Mpv#Hardware_video_acceleration)
+to test
+[hardware acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
+, with command `mpv --hwdec=auto <videofile>`
 
 ## Bluetooth
 
@@ -79,40 +94,6 @@ Enable systemd service: `systemctl enable --now cups.service`.
 The CUPS server can be fully administered through the web interface,
 and there’s documentation for adding printer
 [http://localhost:631/help/admin.html](http://localhost:631/help/admin.html).
-
-## GPU Drivers
-
-To choose [GPU](https://wiki.archlinux.org/title/Graphics_processing_unit) for
-Linux, AMD is still the prefered option for stability and performance,
-but for daily use, it doesn't matter. I've learned that Nvidia driver is getting
-solid enough these days, and Intel is catching up too.
-
-Install `mesa` and `vulkan` related packages:
-
-Arch AMD: `mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon`\
-Arch Intel: `mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver`\
-Arch Nvidia: `nvidia-open` for GPU newer than GTX 1650
-
-For Fedora, need to enable [RPM Fusion](https://rpmfusion.org/)
-then install freeworld packages:
-
-```
-(root)# dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-{free,nonfree}-release-$(rpm -E %fedora).noarch.rpm 
-# for AMD
-(root)# dnf install mesa-va-drivers-freeworld
-# for Intel
-(root)# dnf install intel-media-driver
-# for Nvidia newer than GTX 1650
-(root)# dnf install akmod-nvidia
-```
-
-Ref: [Multimedia on Fedora](https://rpmfusion.org/Howto/Multimedia)
-, [NVIDIA on Fedora](https://rpmfusion.org/Howto/NVIDIA)
-
-Use [mpv](https://wiki.archlinux.org/title/Mpv#Hardware_video_acceleration)
-to test
-[hardware acceleration](https://wiki.archlinux.org/title/Hardware_video_acceleration)
-, with command `mpv --hwdec=auto <videofile>`
 
 ## Disable Watchdogs
 

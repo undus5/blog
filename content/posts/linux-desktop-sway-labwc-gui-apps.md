@@ -49,9 +49,9 @@ it's named `sudo`.
 
 Install Noto fonts related packages:
 
-Arch: `noto-fonts noto-fonts-cjk noto-fonts-emoji`
+Arch: `fontconfig noto-fonts noto-fonts-cjk noto-fonts-emoji`
 
-Fedora:\
+Fedora: `fontconfig`\
 `google-noto-fonts-all google-noto-color-emoji-fonts`\
 `google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts`
 
@@ -116,11 +116,73 @@ Mono: [Jetbrains Mono](https://www.jetbrains.com/lp/mono/)
 Great for programming and terminal.\
 Mono CJK:
 [Sarasa Term](https://github.com/be5invis/Sarasa-Gothic)
-([version description](https://github.com/be5invis/Sarasa-Gothic/issues/12))
-, [Maple Mono](https://github.com/subframe7536/maple-font)
+([version description](https://github.com/be5invis/Sarasa-Gothic/issues/12))\
+Serif CJK: [LXGW Wenkai](https://github.com/lxgw/LxgwWenKai)
 
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)
+
+## KMSCON
+
+[KMSCON](https://github.com/kmscon/kmscon) is a modern TTY alternative
+which support CJK fonts, xkb configs, mouse, GPU rendering, etc.
+
+Arch: `seatd kmscon`\
+Fedora: `seatd kmscon kmscon-freetype`
+
+`seatd` is required for running GUI application after KMSCON, or you will
+encounter error "libseat no backend was able to open a seat".
+
+Enable seatd:
+
+```
+(root)# usermod -aG seat user1
+(root)# systemctl enable seatd
+(root)# systemctl start seatd
+```
+
+Create config file `/etc/kmscon/kmscon.conf`:
+
+```
+font-size=16
+xkb-layouts=us
+xkb-options=ctrl:nocaps
+```
+
+Disable built-in getty and enable kmsconvt:
+
+```
+(root)# systemctl disable getty@.service
+(root)# systemctl enable kmsconvt@.service
+```
+
+Login sessions launched by KMSCON are treated as remote sessions, which means
+`poweroff` and `reboot` commands for regular user need authentication for
+administritve user, to solve this problem, add polkit rules to bypass this
+authentication, `/etc/polkit-1/rules.d/20-remote-shutdown.rules`:
+
+```
+polkit.addRule(function(action, subject) {
+   if ((action.id == "org.freedesktop.login1.power-off" ||
+        action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
+        action.id == "org.freedesktop.login1.reboot" ||
+        action.id == "org.freedesktop.login1.reboot-multiple-sessions") &&
+       subject.isInGroup("wheel")) {
+      return polkit.Result.YES;
+   }
+});
+```
+
+Ref: [Polkit#Configuration](https://wiki.archlinux.org/title/Polkit#Configuration)
+
+To start a GUI application, a wrapper command is required since KMSCON is
+already using the GPU:
+
+```
+(user)$ kmscon-launch-gui sway
+```
+
+Ref: [KMSCON - ArchWiki](https://wiki.archlinux.org/title/KMSCON)
 
 ## Sway Labwc
 

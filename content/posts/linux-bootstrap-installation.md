@@ -42,7 +42,7 @@ are just package management system, release model and community support.
 This guide is basically distro independent, since I don't like to be bound to
 any specific platform in any form, always avoid using any distro specific tools,
 try my best to maintain the portability. It's tested on Arch, Fedora and
-Debian, the differences are minor.
+Debian(Ubuntu), the differences are minor.
 
 ## Live ISO
 
@@ -71,9 +71,9 @@ Using [Parted](https://wiki.archlinux.org/title/Parted) to do the job:
 ```
 (root)# parted /dev/nvme0n1
 (parted) mklabel gpt
-(parted) mkpart EFIPART fat32 1MiB 2049MiB
+(parted) mkpart EFIPART fat32 1MiB 1025MiB
 (parted) set 1 esp on
-(parted) mkpart ROOTPART btrfs 2049MiB 100%
+(parted) mkpart ROOTPART btrfs 1025MiB 100%
 (parted) type 2 4f68bce3-e8cd-4db1-96e7-fbcaf984b709
 (parted) quit
 ```
@@ -147,54 +147,47 @@ Copy on Write (CoW) nature, useful for creating backup against system crash.
 
 Check the online mirrorlist, pick proper one, then edit local mirrorlist config.
 
-Arch: [mirrorlist](https://archlinux.org/mirrorlist/),
+Arch: [Pacman Mirrorlist](https://archlinux.org/mirrorlist/),
 local: `/etc/pacman.d/mirrorlist`\
-Fedora: [mirrorlist](https://mirrormanager.fedoraproject.org),
+Fedora: [Archive Mirrors](https://mirrormanager.fedoraproject.org),
 local: `/etc/yum.repos.d/fedora.repo`\
-Debian: [mirrorlist](https://www.debian.org/mirror/list),
-local: `/etc/apt/sources.list`
+Debian: [Debian Mirrors](https://www.debian.org/mirror/list),
+local: `/etc/apt/sources.list`\
+Ubuntu: [Archive Mirrors](https://launchpad.net/ubuntu/+archivemirrors)
 
 ## Base System
 
 Now we are ready to install the base system. We will use a dedicated tool
 to install base system packages into /mnt.
 
-Common packages:
-
-```
-(root)# common_pkgs="filesystem glibc bash bash-completion coreutils dracut \
-    cryptsetup systemd systemd-networkd systemd-resolved zram-generator \
-    shadow-utils util-linux procps-ng iputils e2fsprogs btrfs-progs parted \
-    kbd ncurses less man-db curl plymouth openssh-clients openssh-server fwupd"
-(root)# common_pkgs+="iproute vim zram-generator"
-```
-
-Note: `iproute` is `iproute2` in Arch, `vim` is `vim-minimal` in Fedora,
-`zram-generator` is `systemd-zram-generator` in Debian.
+For package names in `$PKGS`, refers to
+[hikerlinux/packages.in](https://github.com/undus5/hikerlinux/blob/main/bootstrap/packages.in)
 
 For Arch it's
 [Pacstrap](https://wiki.archlinux.org/title/Installation_guide#Install_essential_packages):
 
 ```
-(root)# pacstrap -K /mnt ${common_pkgs} \
-    linux linux-firmware amd-ucode intel-ucode pacman
+(root)# pacstrap -K /mnt $PKGS
 ```
 
 For Fedora it's DNF:
 
 ```
-(root)# dnf --use-host-config --releasever=44 --installroot=/mnt install \
-    ${common_pkgs} kernel linux-firmware glibc-langpack-en rootfiles \
-    amd-ucode-firmware iwlwifi-mvm-firmware dnf5 dnf5-plugins \
-    rpmfusion-free-release rpmfusion-nonfree-release
+(root)# dnf --use-host-config --releasever=44 --installroot=/mnt install $PKGS
 ```
 
 For Debian it's [Debootstrap](https://wiki.debian.org/Debootstrap):
 
 ```
-(root)# debootstrap --include=${common_pkgs},\
-    linux-image-amd64,non-free-firmware,amd64-microcode,intel-microcode \
-    stable /mnt http://deb.debian.org/debian/
+(root)# debootstrap --components=main,contrib,non-free,non-free-firmware \
+    --include=$PKGS stable /mnt http://deb.debian.org/debian/
+```
+
+For Ubuntu:
+
+```
+(root)# debootstrap --components=main,restricted,universe,multiverse \
+    --include=$PKGS resolute /mnt http://archive.ubuntu.com/ubuntu
 ```
 
 ## Fstab
@@ -240,8 +233,8 @@ Mount virtual filesystems to `/mnt` for later chroot:
 
 ```
 (root)# ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-(root)# systemctl enable systemd-timesyncd.service
 (root)# hwclock --systohc
+(root)# systemctl enable systemd-timesyncd.service
 ```
 
 ## Localization
@@ -254,7 +247,8 @@ For Arch and Debian:
 (root)# locale-gen
 ```
 
-For Fedora, they are provided by packages `glibc-langpack-en`, `glibc-langpack-zh`
+For Fedora, they are provided by packages `glibc-langpack-en`,
+`glibc-langpack-zh` or `glibc-all-langpacks`.
 
 Set LANG variable:
 
@@ -414,15 +408,20 @@ dracut install script, put it into say `/usr/local/bin/dracut-install.sh`:
 ```
 #!/bin/bash
 
+set -e
+
 kver="$1"
 dest="$2"
+
+[[ -n "$kver" ]] || kver=$(ls -1 /usr/lib/modules | tail -n 1)
 kimg="/usr/lib/modules/${kver}/vmlinuz"
-[[ -f "$kimg" ]] || exit 1
+[[ -f $kimg ]] || kimg=/boot/vmlinuz-${kver}   # ubuntu
+[[ -f $kimg ]] || exit 1
 
 dracut-install() {
-    local stubdir="$1"
-    local vmlinuz=${stubdir}/vmlinuz
-    local initrd=${stubdir}/initrd
+    local stub_dir="$1"
+    local vmlinuz=${stub_dir}/vmlinuz
+    local initrd=${stub_dir}/initrd
     install -Dm0644 "$kimg" "$vmlinuz"
     dracut --force --hostonly --no-hostonly-cmdline --kver "$kver" "$initrd"
 }
@@ -572,4 +571,3 @@ Ref: [Limine - Arch Wiki](https://wiki.archlinux.org/title/Limine)
 ## Reboot
 
 All done. Now reboot into the new system.
-

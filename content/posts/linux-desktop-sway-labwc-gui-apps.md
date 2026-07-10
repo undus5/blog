@@ -225,19 +225,9 @@ both are simple and fast terminal emulators.
 
 ## GTK Theme
 
-For GTK 4:
-
 ```
 (user)$ gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 (user)$ gsettings set org.gnome.desktop.interface color-scheme default
-```
-
-For GTK 3, install `gnome-themes-extra` package:
-
-```
-(user)$ ls /usr/share/themes
-(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
-(user)$ gsettings set org.gnome.desktop.interface gtk-theme Adwaita
 ```
 
 Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_theme_configuration)
@@ -247,18 +237,13 @@ Ref: [GTK#Basic theme configuration](https://wiki.archlinux.org/title/GTK#Basic_
 
 IMHO, if you're not intended to use KDE desktop environment, then avoid choosing
 KDE replated components, since they are tightly coupled with the KDE framework,
-lots of dependencies would be installed. Even for a very simple package like
-[breeze-icons](https://github.com/KDE/breeze-icons/), if you want to build it
-independently, you still need to build the
-[KDE/extra-cmake-modules](https://github.com/KDE/extra-cmake-modules) package
-first, which is annoying. LXQt is in a similar situation.
+lots of dependencies would be installed.
 
-The original
-[qt6ct](https://github.com/trialuser02/qt6ct)
-is archived, although there is a
-[successor](https://www.opencode.net/trialuser/qt6ct), I decided not dealing with
-KDE apps anymore. For other independent Qt apps, they usually work well by default,
-no need tools like qt5ct/qt6ct get involved.
+The original [trialuser02/qt6ct](https://github.com/trialuser02/qt6ct)
+is archived, although there is a successor
+[trialuser/qt6ct](https://www.opencode.net/trialuser/qt6ct), I decided not
+dealing with KDE apps anymore. For other independent Qt apps, they usually
+work well by default, no need tools like qt5ct/qt6ct get involved.
 
 ## Icon Theme
 
@@ -278,8 +263,8 @@ Set GTK app icon theme:
 (user)$ gsettings set org.gnome.desktop.interface icon-theme Qogir
 ```
 
-Recommended icon theme:
-[Qogir-icon-theme](https://github.com/vinceliuice/Qogir-icon-theme)
+[papirus-icon-theme](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
+is a good third-party icon theme.
 
 ## Mouse Cursor Theme
 
@@ -290,7 +275,7 @@ Set cursor theme and size for sway in `~/.config/sway/config`:
 ```
 # seat <name> xcursor_theme <theme> [<size>]
 seat seat0 xcursor_theme default 24
-seat seat0 xcursor_theme Qogir 32
+seat seat0 xcursor_theme breeze_cursors 32
 ```
 
 Ref: [sway-input(5)](https://man.archlinux.org/man/sway-input.5.en)
@@ -298,14 +283,11 @@ Ref: [sway-input(5)](https://man.archlinux.org/man/sway-input.5.en)
 Set cursor theme and size for labwc in `~/.config/labwc/environment`:
 
 ```
-XCURSOR_THEME=Qogir
+XCURSOR_THEME=breeze_cursors
 XCURSOR_SIZE=32
 ```
 
 Ref: [labwc-config(5)](https://labwc.github.io/labwc-config.5.html)
-
-Recommended cursor theme:
-[Qogir-icon-theme](https://github.com/vinceliuice/Qogir-icon-theme)
 
 ## File Manager
 
@@ -520,4 +502,3 @@ sites for the new tab page.
 ## More Apps
 
 For more apps, refer to: [Useful add ons for sway](https://github.com/swaywm/sway/wiki/Useful-add-ons-for-sway).
-

@@ -277,7 +277,7 @@ Create `/etc/systemd/zram-generator.conf`, the size is in MiB.
 
 ```
 [zram0]
-zram-size = min(ram, 8192)
+zram-size = min(ram/2, 8192)
 compression-algorithm = zstd
 ```
 

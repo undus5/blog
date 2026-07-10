@@ -51,29 +51,17 @@ Install Noto fonts related packages:
 
 Arch: `fontconfig noto-fonts noto-fonts-cjk noto-fonts-emoji`
 
-Fedora: `fontconfig`\
-`google-noto-fonts-all google-noto-color-emoji-fonts`\
-`google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts`
+Fedora: `fontconfig default-fonts`
 
 The default lookup order for CJK fonts would pick wrong characters in some cases,
-such as “复” in chinese word “复制”.
+such as for chinese words "关于" and "复制", you will notice the mismatch if
+there were wrong charaters.
 To fix this, adjust fallback font order by creating `/etc/fonts/local.conf` with:
 
 ```
 <?xml version="1.0"?>
 <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
 <fontconfig>
-<alias>
-    <family>sans-serif</family>
-    <prefer>
-        <family>Noto Sans</family>
-        <family>Noto Sans CJK SC</family>
-        <family>Noto Sans CJK TC</family>
-        <family>Noto Sans CJK HK</family>
-        <family>Noto Sans CJK JP</family>
-        <family>Noto Sans CJK KR</family>
-    </prefer>
-</alias>
 <alias>
     <family>monospace</family>
     <prefer>
@@ -83,6 +71,17 @@ To fix this, adjust fallback font order by creating `/etc/fonts/local.conf` with
         <family>Noto Sans Mono CJK HK</family>
         <family>Noto Sans Mono CJK JP</family>
         <family>Noto Sans Mono CJK KR</family>
+    </prefer>
+</alias>
+<alias>
+    <family>sans-serif</family>
+    <prefer>
+        <family>Noto Sans</family>
+        <family>Noto Sans CJK SC</family>
+        <family>Noto Sans CJK TC</family>
+        <family>Noto Sans CJK HK</family>
+        <family>Noto Sans CJK JP</family>
+        <family>Noto Sans CJK KR</family>
     </prefer>
 </alias>
 <alias>
@@ -102,22 +101,12 @@ To fix this, adjust fallback font order by creating `/etc/fonts/local.conf` with
 Later you could add custom fonts under user home directory
 `~/.local/share/fonts/`, then create `~/.config/fontconfig/fonts.conf`
 with same format to override default fonts. Use
-[fc-cache(1)](https://man.archlinux.org/man/fc-cache.1) to rebuild font cache,
-use [fc-list(1)](https://man.archlinux.org/man/fc-list.1) to check whether
-custom font families are applied correctly.
+[fc-cache(1)](https://man.archlinux.org/man/fc-cache.1) `fc-cache -f -v` to
+rebuild font cache, use [fc-list(1)](https://man.archlinux.org/man/fc-list.1)
+`fc-list : family` to check whether custom font families are applied correctly.
 
-Noto font families are good as system level fallback options, but there're
-preferred ones for customization:
-
-Sans: [Atkinson Hyperlegible Next](https://www.brailleinstitute.org/freefont/)
-This font family has clear distinguishable `0iIoO`.\
-Sans CJK: [IBM Plex](https://github.com/IBM/plex)\
-Mono: [Jetbrains Mono](https://www.jetbrains.com/lp/mono/)
-Great for programming and terminal.\
-Mono CJK:
-[Sarasa Term](https://github.com/be5invis/Sarasa-Gothic)
-([version description](https://github.com/be5invis/Sarasa-Gothic/issues/12))\
-Serif CJK: [LXGW Wenkai](https://github.com/lxgw/LxgwWenKai)
+[Jetbrains Mono](https://www.jetbrains.com/lp/mono/) is prefered as the default
+monospace font, it's good for programming and terminal display.
 
 Ref: [Font configuration#Fontconfig configuration](https://wiki.archlinux.org/title/Font_configuration#Fontconfig_configuration)
 , [Font configuration#Alias](https://wiki.archlinux.org/title/Font_configuration#Alias)

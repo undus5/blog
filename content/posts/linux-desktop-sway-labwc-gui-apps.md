@@ -260,7 +260,7 @@ Set GTK app icon theme:
 
 ```
 (user)$ ls /usr/share/icons
-(user)$ gsettings set org.gnome.desktop.interface icon-theme Qogir
+(user)$ gsettings set org.gnome.desktop.interface icon-theme Adwaita
 ```
 
 [papirus-icon-theme](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)

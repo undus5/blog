@@ -100,26 +100,26 @@ Be careful with the minor differences.
 
 ## Bootloader Entries
 
-This A/B solution can work with any bootloader, I use systemd-boot for now.
+This A/B solution can work with any bootloader, here's an example of
+[Limine](https://github.com/Limine-Bootloader/Limine).
 
-Systemd-boot entry for `@a` in `/efi/loader/entries/a.conf`:
-
-```
-title Boot A
-linux /a/vmlinuz
-initrd /a/initrd
-options rootflags=subvol=@a/@ quiet
-sort-key A
-```
-
-Systemd-boot entry for `@b` in `/efi/loader/entries/b.conf`:
+Edit `/efi/limine/limine.conf`:
 
 ```
-title Boot B
-linux /b/vmlinuz
-initrd /b/initrd
-options rootflags=subvol=@b/@ quiet
-sort-key B
+timeout 0.25
+quiet: yes
+
+/Boot A
+   protocol: linux
+   kernel_path: boot():/a/vmlinuz
+   module_path: boot():/a/initramfs.img
+   cmdline: rootflags=subvol=@a/@ quiet splash
+
+/Boot B
+   protocol: linux
+   kernel_path: boot():/b/vmlinuz
+   module_path: boot():/b/initramfs.img
+   cmdline: rootflags=subvol=@b/@ quiet splash
 ```
 
 ## Bash Script
@@ -128,13 +128,14 @@ All the processes can be automated into a bash script:
 
 ```
 #!/usr/bin/bash
+
 set -e
 
-errf() { printf "${@}" >&2 && exit 1; }
+errf() { printf "$@\n" >&2; exit 1; }
 
-[[ ${EUID} == 0 ]] || errf "need root priviledge\n"
+(( EUID == 0 )) || errf "need root priviledge"
 
-case ${1} in
+case "$1" in
     ab)
         srcname=a
         dstname=b
@@ -144,34 +145,33 @@ case ${1} in
         dstname=a
         ;;
     *)
-        errf "Usage: $(basename ${0}) <ab|ba>\n"
+        errf "Usage: $(basename $0) <ab|ba>"
         ;;
 esac
 
-dstvol_alert="Abort: you are running under '@${dstname}' subvolume now\n"
-findmnt /${srcname} &>/dev/null && errf "${dstvol_alert}"
-findmnt /${dstname} &>/dev/null || errf "${dstvol_alert}"
-
-printf "==> Copy vmlinuz and initrd from '@${srcname}' to '@${dstname}'\n"
-stubsrc=/efi/${srcname}
-stubdst=/efi/${dstname}
-stubtmp=/efi/t
-[[ -d ${stubdst} ]] && mv ${stubdst} ${stubtmp}
-[[ -d ${stubsrc} ]] && cp -r ${stubsrc} ${stubdst}
-[[ -d ${stubtmp} ]] && rm -rf ${stubtmp}
-
+srcvol=/${srcname}/@
 dstvol=/${dstname}/@
 
+dstvol_alert="==> abort: you are running under '@${dstvol}' subvolume now"
+findmnt /${srcname} &>/dev/null && errf "$dstvol_alert"
+findmnt /${dstname} &>/dev/null || errf "$dstvol_alert"
+
+stubsrc=/efi/${srcname}
+stubdst=/efi/${dstname}
+mkdir -p $stubdst
+cp -rfP ${stubsrc}/* ${stubdst}/
+echo "==> copied vmlinuz, initramfs.img from '@${srcname}' to '@${dstname}'"
+
 # remove the read-only protection just in case
-[[ -d ${dstvol} ]] && btrfs prop set -f -ts ${dstvol} ro false
+btrfs prop set -f -ts $dstvol ro false
 
-printf "==> "
-[[ -d ${dstvol} ]] && btrfs subvolume delete ${dstvol}
+btrfs subvolume delete $dstvol > /dev/null
+echo "==> deleted subvolume '${dstvol}'"
 
-printf "==> "
-btrfs subvolume snapshot / ${dstvol}
+btrfs subvolume snapshot / $dstvol > /dev/null
+echo "==> created snapshot of '${srcvol}' in '${dstvol}'"
 
-printf "==> Modify fstab in '/${dstname}/@'\n"
+echo "==> updated fstab in '/${dstname}/@'"
 sed -i -r \
     -e "s#/${dstname}#/${srcname}#" \
     -e "s#@${dstname}\s+0#@${srcname}   0#" \
@@ -181,8 +181,8 @@ sed -i -r \
 time=$(date +%Y%m%d.%H%M%S)
 timetxt=/${dstname}/timestamp.${time}.txt
 rm /${dstname}/*.txt
-printf "${time}\n" > ${timetxt}
-printf "==> Create ${timetxt}\n"
+echo "${time}" > $timetxt
+echo "==> created ${timetxt}"
 ```
 
 ## Cache Clean
@@ -207,4 +207,3 @@ Clean package cache:
 
 [apt(8)](https://man.archlinux.org/man/apt.8.en):
 `apt autoremove && apt autoclean`
-

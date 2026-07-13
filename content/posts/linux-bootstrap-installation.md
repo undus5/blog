@@ -410,24 +410,26 @@ dracut install script, put it into say `/usr/local/bin/dracut-install.sh`:
 
 set -e
 
-kver="$1"
-dest="$2"
+KVER="$1"
+DEST=/boot
 
-[[ -n "$kver" ]] || kver=$(ls -1 /usr/lib/modules | tail -n 1)
-kimg="/usr/lib/modules/${kver}/vmlinuz"
-[[ -f $kimg ]] || kimg=/boot/vmlinuz-${kver}   # ubuntu
-[[ -f $kimg ]] || exit 1
+KDIR=/usr/lib/modules
+[[ -n "$KVER" ]] || KVER=$(ls -1 $KDIR | tail -n 1)
+KIMG=${KDIR}/${KVER}/vmlinuz # fedora, archlinux
+[[ -f $KIMG ]] || KIMG=/boot/vmlinuz-${KVER} # ubuntu
+[[ -f $KIMG ]] || exit 1
 
-dracut-install() {
-    local stub_dir="$1"
-    local vmlinuz=${stub_dir}/vmlinuz
-    local initrd=${stub_dir}/initrd
-    install -Dm0644 "$kimg" "$vmlinuz"
-    dracut --force --hostonly --no-hostonly-cmdline --kver "$kver" "$initrd"
-}
+echo "==> generating initramfs.img ..."
+dracut --force --hostonly --no-hostonly-cmdline \
+    --kver "$KVER" "${DEST}/initramfs.img"
+echo "==> installed '${DEST}/initramfs.img' (${KVER})"
+install -Dm0644 $KIMG ${DEST}/vmlinuz
+echo "==> installed '${DEST}/vmlinuz' (${KVER})"
 
-[[ -d "$dest" ]] && dracut-install "$dest" && exit 0
-dracut-install /efi/linux
+install -Dm0644 ${DEST}/initramfs.img /efi/linux/initramfs.img
+echo "==> installed '/efi/linux/initramfs.img' (${KVER})"
+install -Dm0644 ${DEST}/vmlinuz /efi/linux/vmlinuz
+echo "==> installed '/efi/linux/vmlinuz' (${KVER})"
 ```
 
 Then we run it once manually to initialize boot images.
@@ -529,7 +531,7 @@ quiet: yes
 /Linux
    protocol: linux
    kernel_path: boot():/linux/vmlinuz
-   module_path: boot():/linux/initrd
+   module_path: boot():/linux/initramfs.img
    cmdline: rootflags=subvol=@ quiet splash
 ```
 

@@ -1,7 +1,7 @@
 +++
 title       = 'Linux Post Installation'
 subtitle    = ''
-lastmod     = '2026-05-10'
+lastmod     = '2026-07-15'
 date        = '2025-11-26'
 tags        = ['linux']
 showSummary = true
@@ -95,24 +95,71 @@ The CUPS server can be fully administered through the web interface,
 and there’s documentation for adding printer
 [http://localhost:631/help/admin.html](http://localhost:631/help/admin.html).
 
-## Disable Watchdogs
+## Non-root LUKS Disk
 
-Check for a hardware watchdog module:
+Here's how to add a second disk drive encrypted with LUKS. For initializing and
+formating encrypted disk, refer to
+[Linux Bootstrap Installation](/posts/linux-bootstrap-installation/).
+Let's say the entrypted partition is `/dev/sda1`, the decrypted partition map
+name is `hdd`, and you want to mount it at `/data`.
+
+1, create keyfile (only follow this step if your root partition is encrypted):
 
 ```
-(root)# lsmod | grep wdt
+(root)# printf '%s' 'your_passphrase' | install -m 0600 /dev/stdin /etc/cryptsetup-keys.d/hdd.key
 ```
 
-Add to
-[kernel module blacklist](https://wiki.archlinux.org/title/Kernel_module#Blacklisting):
+2, get entrypted partition's UUID:
 
 ```
-(root)# cat > /etc/modprobe.d/nowdt.conf << EOB
-blacklist iTCO_wdt
-blacklist sp5100_tco
-blacklist intel_oc_wdt
-EOB
+(root)# blkid -s UUID -o value /dev/sda1
 ```
 
-This setting is for
-[improving performance](https://wiki.archlinux.org/title/Improving_performance#Watchdogs).
+3, create crypttab `/etc/crypttab` with:
+
+```
+hdd UUID=...sda1_uuid... /etc/cryptsetup-keys.d/hdd.key
+```
+
+4, open encrypted partition, get decrypted partition's UUID:
+
+```
+(root)# cryptsetup open /dev/sda1 hdd
+(root)# blkid -s UUID -o value /dev/mapper/hdd
+```
+
+5, add decrypted partition mount point to `/etc/fstab`:
+
+```
+...
+UUID=...hdd_uuid... /data btrfs compress=zstd 0 0
+...
+```
+
+Ref: [Dm-crypt/Device_encryption#Keyfiles](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#Keyfiles)
+, [Dm-crypt/System_configuration#crypttab](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#crypttab)
+
+## Plymouth
+
+Plymouth provides themed graphical interface for entering LUKS passphrase
+and boot animation.
+
+Packages:\
+Fedora: `plymouth-system-theme`\
+Arch: `plymouth`
+
+Themes are under `/usr/share/plymouth/themes/`, add to config file
+`/etc/plymouth/plymouthd.conf`:
+
+```
+[Daemon]
+Theme=spinner
+```
+
+Fix flickering on LUKS passphrase interface by disabling SimpleDRM. SimpleDRM
+is for removing flickering between motherboard splash screen and plymouth, it
+works great on normal configuration, but triggering another flickering when
+using LUKS (black for a second), to disable it, append `plymouth.use-simpledrm=0`
+to kernel parameters in your bootloader config file.
+
+Ref: [Plymouth#Using_SimpleDRM](https://wiki.archlinux.org/title/Plymouth#Using_SimpleDRM)

@@ -1046,3 +1046,19 @@ $ qemu-system-x86_64 \
 
 Ref: [Udev#udev rule example](https://wiki.archlinux.org/title/Udev#udev_rule_example)
 
+## Troubleshooting
+
+1, Display output is not active
+
+When I switched from Arch to Fedora, my VMs showed this error, it turns out the
+two distro's OVMF_VARS.fd files are incompatible, just removed and recreated
+them solved the problem.
+
+2, Keep the VM window open after VM shutting down
+
+When encountering errors, the window close immediately, and the error messages
+could not be catched, use `-no-shutdown` flag to keep the window.
+
+```
+(user)$ qemu-system-x86_64 ... -no-shutdown
+```

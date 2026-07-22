@@ -17,6 +17,7 @@ hidden      = true
 | Dark Reader | - |
 | Enhancer for Youtube | - |
 | FetchV | video downloader for m3u8 & hls |
+| Imageye | image downloader |
 | OneTab | - |
 | SingleFile | save a complete page into a single HTML file |
 | Spoof Geolocation | disguise location |

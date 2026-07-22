@@ -161,7 +161,7 @@ Now we are ready to install the base system. We will use a dedicated tool
 to install base system packages into /mnt.
 
 For package names in `$PKGS`, refers to
-[hikerlinux/packages.in](https://github.com/undus5/hikerlinux/blob/main/bootstrap/packages.in)
+[hikerlinux/packages.sh](https://github.com/undus5/hikerlinux/blob/main/bootstrap/packages.sh)
 
 For Arch it's
 [Pacstrap](https://wiki.archlinux.org/title/Installation_guide#Install_essential_packages):

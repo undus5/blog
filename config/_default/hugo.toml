@@ -42,31 +42,30 @@ weight      = 1
 type = "plain"
 
 [[menus.footer]]
+identifier  = "archives"
+name        = "Archives"
+pageRef     = "/archives"
+weight      = 3
+
+[[menus.footer]]
 identifier  = "tags"
 name        = "Tags"
 pageRef     = "/tags"
-weight      = 2
+weight      = 5
 
 [[menus.footer]]
 identifier  = "rss"
 name        = "Feed"
 pageRef     = "/"
-weight      = 3
+weight      = 7
 [menus.footer.params]
 targetBlank = true
 format      = "rss"
 
 [[menus.footer]]
-identifier  = "archives"
-name        = "Archives"
-pageRef     = "/archives"
-weight      = 5
-
-[[menus.footer]]
 identifier  = "github"
 name        = "Github"
 url         = "https://github.com/undus5"
-weight      = 7
+weight      = 9
 [menus.footer.params]
 targetBlank = true
-

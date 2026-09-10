@@ -37,6 +37,12 @@ pageRef    = "mood"
 name       = "MOOD"
 weight     = 3
 
+[[menus.main]]
+identifier = "about"
+pageRef    = "about"
+name       = "ABOUT"
+weight     = 5
+
 [[menus.footer]]
 name        = "🄯2023-2026"
 weight      = 1

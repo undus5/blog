@@ -21,7 +21,7 @@ Distro is trival, just learn the basics and build your own.
 4. [Linux Desktop: Sway, Labwc, GUI Apps](/posts/linux-desktop-sway-labwc-gui-apps/)
 5. [Linux Live ISO Packaging](/posts/linux-live-iso-packaging/)
 
-## Preface
+## Intro
 
 Want to stop distro hopping? Sure, just go read through the
 [ArchWiki](https://wiki.archlinux.org/title/Main_page). Don't get me wrong,

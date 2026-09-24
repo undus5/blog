@@ -20,7 +20,7 @@ You only need a window manager to do your work.
 4. Linux Desktop: Sway, Labwc, GUI Apps
 5. [Linux Live ISO Packaging](/posts/linux-live-iso-packaging/)
 
-## Preface
+## Intro
 
 You don't really need a versatile desktop suite, just a window manager can get
 your job done, less components, less bugs, more efficient.

@@ -20,7 +20,7 @@ Inspired from Android A/B system updates mechanism.
 4. [Linux Desktop: Sway, Labwc, GUI Apps](/posts/linux-desktop-sway-labwc-gui-apps/)
 5. [Linux Live ISO Packaging](/posts/linux-live-iso-packaging/)
 
-## Preface
+## Intro
 
 This guide is distro independent, could work on any distros.
 

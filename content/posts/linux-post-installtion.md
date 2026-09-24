@@ -21,7 +21,7 @@ Essential configurations before desktop components getting involved.
 4. [Linux Desktop: Sway, Labwc, GUI Apps](/posts/linux-desktop-sway-labwc-gui-apps/)
 5. [Linux Live ISO Packaging](/posts/linux-live-iso-packaging/)
 
-## Preface
+## Intro
 
 This guide is distro independent, tested on Arch and Fedora.
 

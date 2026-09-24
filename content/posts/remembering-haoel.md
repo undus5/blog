@@ -1,7 +1,7 @@
 +++
 title       = "纪念耗子叔"
 description = "R.I.P."
-lastmod     = 2025-05-14T11:56:00+08:00
+lastmod     = 2026-09-23
 date        = 2023-05-18
 aliases     = "/posts/remembering-haoel/"
 weight      = 2000

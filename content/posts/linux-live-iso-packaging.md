@@ -22,7 +22,7 @@ The last piece of puzzle.
 4. [Linux Desktop: Sway, Labwc, GUI Apps](/posts/linux-desktop-sway-labwc-gui-apps/)
 5. Linux Live ISO Packaging
 
-## Preface
+## Intro
 
 After [Linux Bootstrap Installation](/posts/linux-bootstrap-installation/),
 we can package our own live ISO from that root filesystem, using `dracut`,

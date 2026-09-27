@@ -470,18 +470,16 @@ Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 
 ## Other Apps
 
-| Category | Arch | Fedora |
+| Category | Fedora | Arch |
 | --- | --- | --- |
 | Audio Control | pavucontrol | - |
 | PDF | zathura zathura-pdf-poppler | - |
 | Image Viewer | swayimg | - |
-| Image Editor | [photoflare](https://github.com/PhotoFlare/photoflare) | - |
 | Video Player | mpv | - |
-| Ebook Reader | [KOReader](https://koreader.rocks/) | - |
-| Audiobook Player | - | - |
+| Ebook Reader | [Readest](https://github.com/readest/readest), [KOReader](https://koreader.rocks/) | - |
 | Web Browser | [brave-origin](https://versions.brave.com/), [helium](https://github.com/imputnet/helium-linux/releases/latest), [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [waterfox](https://www.waterfox.com/download/) | - |
 | Text to QR Code | qrencode | - |
-| QR Code to Text | zbar | zbar-tools |
+| QR Code to Text | zbar-tools | zbar |
 
 Set default browser:
 

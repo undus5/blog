@@ -16,11 +16,11 @@ hidden      = true
 | Aria2 Explorer | aria2 web panel |
 | Dark Reader | - |
 | Enhancer for Youtube | - |
-| FetchV | video downloader for m3u8 & hls |
+| FetchV | video downloader |
+| [cat-catch](https://github.com/xifangczy/cat-catch) | video downloader |
 | Imageye | image downloader |
 | OneTab | - |
 | SingleFile | save a complete page into a single HTML file |
 | Spoof Geolocation | disguise location |
 | uBlock Origin Lite | - |
 | Vimium | - |
-

@@ -476,7 +476,7 @@ Ref: [Fcitx5 - ArchWiki](https://wiki.archlinux.org/title/Fcitx5)
 | PDF | zathura zathura-pdf-poppler | - |
 | Image Viewer | swayimg | - |
 | Video Player | mpv | - |
-| Ebook Reader | [Readest](https://github.com/readest/readest), [KOReader](https://koreader.rocks/) | - |
+| Ebook Reader | [KOReader](https://koreader.rocks/), [Calibre](https://calibre-ebook.com/) | - |
 | Web Browser | [brave-origin](https://versions.brave.com/), [helium](https://github.com/imputnet/helium-linux/releases/latest), [ungoogled-chromium](https://github.com/ungoogled-software/ungoogled-chromium), [waterfox](https://www.waterfox.com/download/) | - |
 | Text to QR Code | qrencode | - |
 | QR Code to Text | zbar-tools | zbar |

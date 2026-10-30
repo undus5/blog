@@ -3,6 +3,7 @@ baseURL = "https://undus.net/"
 theme   = "hugo-pure"
 enableEmoji = true
 ignoreLogs = ['warning-goldmark-raw-html']
+titleCaseStyle = "none"
 #enableRobotsTXT = true
 
 [pagination]

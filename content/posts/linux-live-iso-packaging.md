@@ -2,7 +2,7 @@
 title       = 'Linux Live ISO Packaging'
 lastmod     = '2026-09-07'
 date        = '2026-06-20'
-tags        = ['Linux']
+tags        = ['linux']
 showSummary = true
 showTOC     = true
 weight      = 1000

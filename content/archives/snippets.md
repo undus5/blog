@@ -21,7 +21,8 @@ Android WiFi "Limited Connection"
 (user)$ settings put global captive_portal_http_url http://httpstat.us/204
 ```
 
-Unpack RPM package
+Unpack RPM package from
+[rpmfind.net](https://rpmfind.net/linux/rpm2html/search.php)
 
 ```
 (user)$ rpm2cpio xxx.rpm | cpio -idmv
